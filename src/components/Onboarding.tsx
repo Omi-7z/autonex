@@ -31,18 +31,18 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
   }, [api]);
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] p-0">
+      <DialogContent className="sm:max-w-md p-0">
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
             {onboardingSlides.map((slide: { title: string, description: string }, index: number) => {
               const Icon = icons[index];
               return (
                 <CarouselItem key={index}>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <Card className="border-none shadow-none">
-                      <CardContent className="flex flex-col items-center justify-center p-6 text-center min-h-[350px]">
-                        <Icon className="w-16 h-16 text-brand-orange mb-6" />
-                        <h2 className="text-2xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</h2>
+                      <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6 text-center min-h-[300px] sm:min-h-[350px]">
+                        <Icon className="w-12 h-12 sm:w-16 sm:h-16 text-brand-orange mb-4 sm:mb-6" />
+                        <h2 className="text-xl sm:text-2xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</h2>
                         <p className="text-muted-foreground">{slide.description}</p>
                       </CardContent>
                     </Card>
@@ -51,8 +51,8 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
               );
             })}
           </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
+          <CarouselPrevious className="left-2 hidden sm:flex" />
+          <CarouselNext className="right-2 hidden sm:flex" />
         </Carousel>
         <div className="flex justify-center p-4 pt-0">
             {current === onboardingSlides.length - 1 ? (
