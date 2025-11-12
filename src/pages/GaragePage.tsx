@@ -9,37 +9,68 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
-import type { ServiceHistory } from "@shared/types";
-import { ShieldAlert, User } from "lucide-react";
+import type { Booking } from "@shared/types";
+import { ShieldAlert, User, Loader2 } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
 import { useUserStore } from "@/stores/user-store";
-function DisputeModal({ service }: { service: ServiceHistory }) {
+import { toast } from "sonner";
+function DisputeModal({ booking }: { booking: Booking }) {
   const { t } = useI18n();
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleSubmitDispute = async () => {
+    if (!message.trim()) return;
+    setIsSubmitting(true);
+    try {
+      await api(`/api/bookings/${booking.id}/dispute`, {
+        method: 'POST',
+        body: JSON.stringify({ reason: message }),
+      });
+      toast.success(t('garage.disputeSuccess'));
+      setIsOpen(false);
+      setMessage("");
+      // Optionally, you could trigger a refetch of the history data here
+    } catch (err) {
+      toast.error(t('garage.disputeFailed'), {
+        description: err instanceof Error ? err.message : "An unknown error occurred.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" disabled={!!booking.dispute}>
           <ShieldAlert className="h-4 w-4 mr-2" />
-          {t('garage.dispute')}
+          {booking.dispute ? t('garage.disputed') : t('garage.dispute')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t('garage.disputeTitle')}</DialogTitle>
           <DialogDescription>
-            {t('garage.disputeDescription', { service: service.service, vendorName: service.vendorName })}
+            {t('garage.disputeDescription', { service: booking.services.map(s => s.name).join(', '), vendorName: booking.vendorName })}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="message" className="text-right">
-              {t('garage.message')}
-            </Label>
-            <Textarea id="message" placeholder={t('garage.messagePlaceholder')} className="col-span-3" />
+          <div className="grid w-full gap-1.5">
+            <Label htmlFor="message">{t('garage.message')}</Label>
+            <Textarea
+              id="message"
+              placeholder={t('garage.messagePlaceholder')}
+              className="col-span-3"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" className="bg-brand-orange hover:bg-brand-orange/90">{t('garage.sendMessage')}</Button>
+          <Button onClick={handleSubmitDispute} disabled={isSubmitting || !message.trim()} className="bg-brand-orange hover:bg-brand-orange/90">
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {t('garage.sendMessage')}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -49,7 +80,7 @@ export function GaragePage() {
   const { t } = useI18n();
   const user = useUserStore((state) => state.user);
   const login = useUserStore((state) => state.login);
-  const [history, setHistory] = useState<ServiceHistory[]>([]);
+  const [history, setHistory] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -57,8 +88,8 @@ export function GaragePage() {
       async function fetchHistory() {
         try {
           setLoading(true);
-          const data = await api<ServiceHistory[]>("/api/garage/history");
-          setHistory(data.map(item => ({...item, date: new Date(item.date), warrantyExpires: item.warrantyExpires ? new Date(item.warrantyExpires) : null })));
+          const data = await api<Booking[]>("/api/garage/history");
+          setHistory(data.map(item => ({...item, date: new Date(item.date) })));
         } catch (err) {
           setError(err instanceof Error ? err.message : "Failed to fetch service history");
         } finally {
@@ -99,7 +130,7 @@ export function GaragePage() {
                       <TableHead>{t('garage.vendor')}</TableHead>
                       <TableHead>{t('garage.service')}</TableHead>
                       <TableHead className="text-right">{t('garage.cost')}</TableHead>
-                      <TableHead>{t('garage.warranty')}</TableHead>
+                      <TableHead>{t('garage.status')}</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -128,21 +159,17 @@ export function GaragePage() {
                         <TableRow key={item.id}>
                           <TableCell>{item.date.toLocaleDateString()}</TableCell>
                           <TableCell className="font-medium">{item.vendorName}</TableCell>
-                          <TableCell>{item.service}</TableCell>
-                          <TableCell className="text-right">${item.cost.toFixed(2)}</TableCell>
+                          <TableCell>{item.services.map(s => s.name).join(', ')}</TableCell>
+                          <TableCell className="text-right">${item.services.reduce((acc, s) => acc + s.price, 0).toFixed(2)}</TableCell>
                           <TableCell>
-                            {item.warrantyExpires ? (
-                              new Date() > item.warrantyExpires ? (
-                                <Badge variant="destructive">{t('garage.warrantyExpired')}</Badge>
-                              ) : (
-                                <Badge variant="secondary">{t('garage.warrantyUntil', { date: item.warrantyExpires.toLocaleDateString() })}</Badge>
-                              )
+                            {item.dispute ? (
+                                <Badge variant="destructive">{t('garage.disputed')}</Badge>
                             ) : (
-                              <span className="text-muted-foreground text-sm">-</span>
+                                <Badge variant="secondary">{t('garage.completed')}</Badge>
                             )}
                           </TableCell>
                           <TableCell className="text-right">
-                            <DisputeModal service={item} />
+                            <DisputeModal booking={item} />
                           </TableCell>
                         </TableRow>
                       ))

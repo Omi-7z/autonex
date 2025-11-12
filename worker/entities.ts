@@ -33,5 +33,6 @@ export class BookingEntity extends IndexedEntity<Booking> {
     status: 'pending',
     services: [],
     adminNotes: "",
+    dispute: undefined,
   };
 }

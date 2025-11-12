@@ -3,13 +3,29 @@ import type { Env } from './core-utils';
 import { ok, notFound, bad } from './core-utils';
 import { VendorEntity, BookingEntity } from "./entities";
 import type { CreateBookingPayload, Booking } from "@shared/types";
-import { MOCK_SERVICE_HISTORY, MOCK_VENDOR_SERVICES } from "@shared/mock-data";
+import { MOCK_VENDOR_SERVICES } from "@shared/mock-data";
 export function userRoutes(app: Hono<{ Bindings: Env }>) {
   // Seed vendors on first request if needed
   let seeded = false;
   app.use('/api/*', async (c, next) => {
     if (!seeded) {
       await VendorEntity.ensureSeed(c.env);
+      // Let's create a mock completed booking for testing garage history
+      const mockCompletedBooking: Booking = {
+        id: 'mock-completed-1',
+        userId: 'mock-user-id',
+        vendorId: 'v1',
+        vendorName: 'Precision Auto Works',
+        date: new Date('2023-10-15'),
+        time: '09:00 AM',
+        needsHumanReview: false,
+        status: 'completed',
+        services: [{ id: 's2-v1', name: 'AC System Check & Recharge', description: 'Inspect for leaks and recharge refrigerant.', price: 180.00, category: 'Mechanical' }],
+      };
+      const bookingEntity = new BookingEntity(c.env, mockCompletedBooking.id);
+      if (!(await bookingEntity.exists())) {
+        await BookingEntity.create(c.env, mockCompletedBooking);
+      }
       seeded = true;
     }
     await next();
@@ -74,9 +90,33 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     const updatedBooking = await bookingEntity.getState();
     return ok(c, updatedBooking);
   });
-  // GET GARAGE HISTORY (still mock)
+  // GET GARAGE HISTORY
   app.get('/api/garage/history', async (c) => {
-    return ok(c, MOCK_SERVICE_HISTORY);
+    const { items: allBookings } = await BookingEntity.list(c.env);
+    // In a real app, you'd filter by the authenticated user's ID
+    const completedBookings = allBookings.filter(b => b.status === 'completed' && b.userId === 'mock-user-id');
+    return ok(c, completedBookings);
+  });
+  // POST DISPUTE
+  app.post('/api/bookings/:id/dispute', async (c) => {
+    const { id } = c.req.param();
+    const { reason } = await c.req.json<{ reason: string }>();
+    if (!reason || typeof reason !== 'string' || reason.trim().length === 0) {
+      return bad(c, 'A reason for the dispute is required.');
+    }
+    const bookingEntity = new BookingEntity(c.env, id);
+    if (!(await bookingEntity.exists())) {
+      return notFound(c, 'Booking not found');
+    }
+    await bookingEntity.patch({
+      dispute: {
+        reason: reason.trim(),
+        submittedAt: new Date(),
+      },
+      status: 'action_required', // Flag for admin attention
+    });
+    const updatedBooking = await bookingEntity.getState();
+    return ok(c, updatedBooking);
   });
   // GET ADMIN REVIEW QUEUE
   app.get('/api/admin/review-queue', async (c) => {

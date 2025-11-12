@@ -44,6 +44,10 @@ export interface Booking {
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'action_required';
   services: ServiceItem[];
   adminNotes?: string;
+  dispute?: {
+    reason: string;
+    submittedAt: Date;
+  };
 }
 export interface CreateBookingPayload {
   vendorId: string;
