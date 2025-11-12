@@ -11,16 +11,18 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api-client";
 import type { Vendor } from "@shared/types";
-import { Star, ShieldCheck, School, Users, Search } from "lucide-react";
+import { Star, ShieldCheck, School, Users, Search, Bot, Award } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
-function VendorCard({ vendor }: { vendor: Vendor }) {
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+const PREFERRED_VENDOR_ID = 'v4';
+function VendorCard({ vendor, searchTerm }: { vendor: Vendor, searchTerm: string }) {
   const navigate = useNavigate();
   const { t } = useI18n();
   const averageRating = vendor.reviews.length > 0
     ? vendor.reviews.reduce((acc, r) => acc + r.rating, 0) / vendor.reviews.length
     : 0;
   const handleViewDetails = () => {
-    navigate(`/vendors/${vendor.id}`);
+    navigate(`/vendors/${vendor.id}`, { state: { query: searchTerm } });
   };
   return (
     <Card className="flex flex-col h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
@@ -76,12 +78,12 @@ function VendorSkeleton() {
 }
 export function VendorsPage() {
   const { t } = useI18n();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || "");
-  const [serviceFilter, setServiceFilter] = useState("all");
+  const [serviceFilter, setServiceFilter] = useState(searchParams.get('category') || "all");
   const [isAlumniOwned, setIsAlumniOwned] = useState(false);
   const [isParentOwned, setIsParentOwned] = useState(false);
   useEffect(() => {
@@ -98,8 +100,8 @@ export function VendorsPage() {
     }
     fetchVendors();
   }, []);
-  const filteredVendors = useMemo(() => {
-    return vendors.filter(vendor => {
+  const { preferredVendor, otherVendors } = useMemo(() => {
+    const filtered = vendors.filter(vendor => {
       const lowerSearchTerm = searchTerm.toLowerCase();
       const matchesSearch = vendor.name.toLowerCase().includes(lowerSearchTerm) ||
                             vendor.description?.toLowerCase().includes(lowerSearchTerm) ||
@@ -109,6 +111,9 @@ export function VendorsPage() {
       const matchesParent = !isParentOwned || vendor.isParentOwned;
       return matchesSearch && matchesService && matchesAlumni && matchesParent;
     });
+    const preferred = filtered.find(v => v.id === PREFERRED_VENDOR_ID);
+    const others = filtered.filter(v => v.id !== PREFERRED_VENDOR_ID);
+    return { preferredVendor: preferred, otherVendors: others };
   }, [vendors, searchTerm, serviceFilter, isAlumniOwned, isParentOwned]);
   return (
     <AppLayout>
@@ -153,17 +158,35 @@ export function VendorsPage() {
             </div>
           </Card>
           {error && <div className="text-center py-12 text-red-500">{error}</div>}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading ? (
-              Array.from({ length: 6 }).map((_, i) => <VendorSkeleton key={i} />)
-            ) : filteredVendors.length > 0 ? (
-              filteredVendors.map((vendor) => <VendorCard key={vendor.id} vendor={vendor} />)
-            ) : (
-              <div className="col-span-full text-center py-12 text-muted-foreground">
-                <p>{t('vendors.noVendors')}</p>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => <VendorSkeleton key={i} />)}
+            </div>
+          ) : (
+            <>
+              {preferredVendor && (
+                <div className="mb-8">
+                  <Badge className="mb-2 bg-yellow-400 text-yellow-900 hover:bg-yellow-400"><Award className="h-4 w-4 mr-1" /> {t('vendors.preferred')}</Badge>
+                  <VendorCard vendor={preferredVendor} searchTerm={searchTerm} />
+                </div>
+              )}
+              {otherVendors.length > 0 && preferredVendor && (
+                <Alert className="mb-8">
+                  <Bot className="h-4 w-4" />
+                  <AlertTitle>AI Tip</AlertTitle>
+                  <AlertDescription>{t('vendors.aiTip')}</AlertDescription>
+                </Alert>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {otherVendors.map((vendor) => <VendorCard key={vendor.id} vendor={vendor} searchTerm={searchTerm} />)}
               </div>
-            )}
-          </div>
+              {otherVendors.length === 0 && !preferredVendor && (
+                <div className="col-span-full text-center py-12 text-muted-foreground">
+                  <p>{t('vendors.noVendors')}</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </AppLayout>

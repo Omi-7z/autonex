@@ -5,9 +5,12 @@ import { Onboarding } from "@/components/Onboarding";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Wrench, Car, Microscope, Bot } from "lucide-react";
+import { Search, Wrench, Car, Microscope, Bot, Loader2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useI18n } from "@/hooks/use-i18n";
+import { api } from "@/lib/api-client";
+import type { AIIntakeResponse } from "@shared/types";
+import { toast } from "sonner";
 const categoryIcons = {
   quickService: Wrench,
   mechanical: Car,
@@ -19,6 +22,7 @@ export function HomePage() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [aiQuery, setAiQuery] = useState("");
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const navigate = useNavigate();
   const serviceCategories = [
     { key: "quickService", ...t('home.categories.quickService') },
@@ -50,10 +54,21 @@ export function HomePage() {
       navigate(`/vendors?q=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
-  const handleAiSearch = (e: FormEvent) => {
+  const handleAiSearch = async (e: FormEvent) => {
     e.preventDefault();
-    if (aiQuery.trim()) {
-      navigate(`/vendors?q=${encodeURIComponent(aiQuery.trim())}`);
+    if (!aiQuery.trim()) return;
+    setIsAiLoading(true);
+    try {
+      const result = await api<AIIntakeResponse>('/api/ai/intake', {
+        method: 'POST',
+        body: JSON.stringify({ query: aiQuery.trim() }),
+      });
+      navigate(`/vendors?q=${encodeURIComponent(result.searchTerm)}&category=${result.category}`);
+    } catch (err) {
+      toast.error("AI analysis failed. Please try a manual search.");
+      console.error(err);
+    } finally {
+      setIsAiLoading(false);
     }
   };
   const handleCategoryClick = (categoryName: string) => {
@@ -82,7 +97,8 @@ export function HomePage() {
                 onChange={(e) => setAiQuery(e.target.value)}
                 className="min-h-[80px]"
               />
-              <Button type="submit" className="mt-4 bg-brand-orange hover:bg-brand-orange/90">
+              <Button type="submit" className="mt-4 bg-brand-orange hover:bg-brand-orange/90" disabled={isAiLoading}>
+                {isAiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('home.aiButton')}
               </Button>
             </form>

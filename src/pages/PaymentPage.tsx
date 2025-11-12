@@ -60,43 +60,6 @@ export function PaymentPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8 md:py-10 lg:py-12 flex items-center justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">{t('payment.title')}</CardTitle>
-                <CardDescription>{t('payment.description')}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>{t('payment.bookingFailed')}</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-                <PaymentButton className="w-full bg-black hover:bg-black/90 text-white">
-                  <Apple className="h-5 w-5 mr-2" /> Apple Pay
-                </PaymentButton>
-                <PaymentButton className="w-full bg-gray-200 hover:bg-gray-300 text-black">
-                  Google Pay
-                </PaymentButton>
-                <PaymentButton className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  PayPal
-                </PaymentButton>
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">
-                      {t('payment.orPayWithCard')}
-                    </span>
-                  </div>
-                </div>
-                <PaymentButton variant="outline" className="w-full">
-                  <CreditCard className="h-5 w-5 mr-2" /> {t('payment.creditOrDebit')}
-                </PaymentButton>
-              </CardContent>
-            </Card>
             <Card className="bg-muted/50">
               <CardHeader>
                 <CardTitle>{t('payment.summaryTitle')}</CardTitle>
@@ -142,6 +105,43 @@ export function PaymentPage() {
                 <span className="font-semibold">{t('payment.feeLabel')}</span>
                 <span className="text-2xl font-bold text-brand-navy dark:text-white">${booking.bookingFee.toFixed(2)}</span>
               </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold">{t('payment.title')}</CardTitle>
+                <CardDescription>{t('payment.description')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>{t('payment.bookingFailed')}</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                <PaymentButton className="w-full bg-black hover:bg-black/90 text-white">
+                  <Apple className="h-5 w-5 mr-2" /> Apple Pay
+                </PaymentButton>
+                <PaymentButton className="w-full bg-gray-200 hover:bg-gray-300 text-black">
+                  Google Pay
+                </PaymentButton>
+                <PaymentButton className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  PayPal
+                </PaymentButton>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">
+                      {t('payment.orPayWithCard')}
+                    </span>
+                  </div>
+                </div>
+                <PaymentButton variant="outline" className="w-full">
+                  <CreditCard className="h-5 w-5 mr-2" /> {t('payment.creditOrDebit')}
+                </PaymentButton>
+              </CardContent>
             </Card>
           </div>
         </div>

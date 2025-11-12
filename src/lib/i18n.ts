@@ -59,6 +59,8 @@ export const translations = {
       parentOwned: "Parent Owned",
       noVendors: "No vendors match your criteria.",
       viewDetails: "View Details",
+      preferred: "Preferred Vendor",
+      aiTip: "Our AI recommends this all-in-one shop based on its wide range of services and strong community ties.",
     },
     vendorDetail: {
       back: "Back to Vendors",
@@ -70,6 +72,8 @@ export const translations = {
       services: "Services",
       bookAppointment: "Book Appointment",
       error: "Vendor not found.",
+      aiSuggestion: "AI Suggestion",
+      aiSuggestionReason: "Based on your description, this service seems like a good starting point.",
     },
     booking: {
       title: "Your Appointment",
@@ -177,7 +181,7 @@ export const translations = {
       contact: "Contacto",
       terms: "Términos de Servicio",
       privacy: "Política de Privacidad",
-      builtWithLove: "Hecho con ❤️ en Cloudflare",
+      builtWithLove: "Hecho con ❤��� en Cloudflare",
       copyright: "© {year} AutoNex. Todos los derechos reservados.",
     },
     user: {
@@ -188,7 +192,7 @@ export const translations = {
       slides: [
         {
           title: "¿Qué es AutoNex?",
-          description: "Una red de confianza de talleres de reparación de autom��viles locales y de alta calidad. Te ayudamos a encontrar el mecánico adecuado sin complicaciones.",
+          description: "Una red de confianza de talleres de reparación de autom��viles locales y de alta calidad. Te ayudamos a encontrar el mec��nico adecuado sin complicaciones.",
         },
         {
           title: "¿Cómo funciona?",
@@ -226,6 +230,8 @@ export const translations = {
       parentOwned: "Propiedad de Padres",
       noVendors: "Ningún taller coincide con tus criterios.",
       viewDetails: "Ver Detalles",
+      preferred: "Taller Preferido",
+      aiTip: "Nuestra IA recomienda este taller integral por su amplia gama de servicios y fuertes lazos con la comunidad.",
     },
     vendorDetail: {
       back: "Volver a Talleres",
@@ -237,6 +243,8 @@ export const translations = {
       services: "Servicios",
       bookAppointment: "Reservar Cita",
       error: "Taller no encontrado.",
+      aiSuggestion: "Sugerencia de IA",
+      aiSuggestionReason: "Basado en tu descripción, este servicio parece un buen punto de partida.",
     },
     booking: {
       title: "Tu Cita",
@@ -309,7 +317,7 @@ export const translations = {
       message: "Mensaje",
       messagePlaceholder: "Por favor, proporciona detalles sobre el problema...",
       sendMessage: "Enviar Mensaje",
-      disputeSuccess: "Disputa enviada con éxito. Un coordinador la revisará en breve.",
+      disputeSuccess: "Disputa enviada con ��xito. Un coordinador la revisará en breve.",
       disputeFailed: "Error al enviar la disputa.",
       signInPromptTitle: "Accede a Tu Garaje",
       signInPromptDescription: "Inicia sesión para ver tu historial de servicios y garantías.",
@@ -336,7 +344,7 @@ export const translations = {
   zh: {
     header: {
       findVendor: "查找维修���",
-      translateQuote: "���译报价单",
+      translateQuote: "���译��价单",
       myGarage: "我������库",
     },
     footer: {
@@ -345,7 +353,7 @@ export const translations = {
       terms: "服务条款",
       privacy: "��私政策",
       builtWithLove: "❤️ 由 Cloudflare 构建",
-      copyright: "© {year} AutoNex. 版权所有。",
+      copyright: "© {year} AutoNex. 版���所有。",
     },
     user: {
       signOut: "��出",
@@ -355,15 +363,15 @@ export const translations = {
       slides: [
         {
           title: "什么是 AutoNex��",
-          description: "一��由本地优质���车维修店组成的值得信赖的网络。我们帮助您轻松找到合适的技工。",
+          description: "一��由本地优������车维修店组成的值得信赖的网络。我们帮助您轻松找到合适的技工。",
         },
         {
           title: "它是如���工作的���",
-          description: "���述您的问题，选择一���经过审查的维修商，��支付一笔小额可退还的“信托费”来预约诊断。",
+          description: "���述您的问题，选���一���经过审查的维修商，��支付一笔小额可退还的“信托费”来预约��断。",
         },
         {
           title: "真人支持",
-          description: "需要帮助吗？AutoNex 协调员可以审查您的��订，以确保您得到��好的服务。我们随时为您服务。",
+          description: "需要帮助吗？AutoNex 协��员可以审查您的��订，以确保您得到��好的服务。我们随时为您服务。",
         },
       ],
       getStarted: "开始使用",
@@ -376,16 +384,16 @@ export const translations = {
       aiPlaceholder: "描述您的问题……例如，'我的车右��时发出���怪的咔哒声。'",
       aiButton: "寻求帮助",
       categories: {
-        quickService: { name: "快������务", description: "换油���轮胎换位等。" },
+        quickService: { name: "快������务", description: "换油���轮��换位等。" },
         mechanical: { name: "机械维修", description: "发��机、刹车、变速箱。" },
-        bodyGlass: { name: "车身/玻璃", description: "凹��、��缝和喷��。" },
+        bodyGlass: { name: "车身/玻璃", description: "凹��、�����和喷��。" },
         diagnostics: { name: "不确定/诊断", description: "让我们帮您���出问题所在。" },
       },
     },
     vendors: {
       title: "查找维修商",
       subtitle: "浏览我们值得信赖的本地维修店���络。",
-      searchLabel: "按名���或服务�����",
+      searchLabel: "按名�����服务�����",
       searchPlaceholder: "例如，'Precision Auto' 或 '刹车'",
       serviceTypeLabel: "服务类��",
       allServices: "所有服务",
@@ -393,6 +401,8 @@ export const translations = {
       parentOwned: "����拥有",
       noVendors: "没有符合您条���的维修商。",
       viewDetails: "查看详情",
+      preferred: "首选维修商",
+      aiTip: "我们的 AI 根��其广泛的服务范围和强大的社区联系，推荐这家一站式维修店。",
     },
     vendorDetail: {
       back: "返回维修商列表",
@@ -404,6 +414,8 @@ export const translations = {
       services: "服务�����",
       bookAppointment: "预约",
       error: "未找到维修商。",
+      aiSuggestion: "AI 建议",
+      aiSuggestionReason: "根据您的描述，这项服务似乎是一个很好的起点。",
     },
     booking: {
       title: "您的预约",
@@ -426,10 +438,10 @@ export const translations = {
     },
     payment: {
       title: "支付预订费",
-      description: "一笔小额费用以确保您的诊断��段。��款支付给维修商。",
+      description: "一笔小额费��以确保您的诊断��段。��款支付给维修商。",
       bookingFailed: "预订失败",
       orPayWithCard: "或使用�����卡支付",
-      creditOrDebit: "信用卡或借记卡",
+      creditOrDebit: "信���卡或借记卡",
       summaryTitle: "预约摘��",
       vendorLabel: "维修商",
       dateTimeLabel: "日期和时间",
@@ -438,10 +450,10 @@ export const translations = {
       feeLabel: "预订费",
       selectedServices: "已选服务",
       estimatedTotal: "预计总额",
-      payableToVendor: "预计总额在服务完成后直接支付给维修商。",
+      payableToVendor: "预计总额��服务完成后直接支付给维修商。",
     },
     confirmation: {
-      title: "预订已确认！",
+      title: "预订已确认���",
       description: "您的预约已���定。我们已向您的电子��箱发送了确认信。",
       coordinatorNote: "一位 AutoNex 协调员将很��与您联���以审查您的预订。",
       backToHome: "返回���页",
@@ -449,8 +461,8 @@ export const translations = {
     },
     translate: {
       title: "翻译报价单",
-      subtitle: "上传��争������的报价单，进行免费的 AI 驱动分析。",
-      dropzonePrompt: "将文件拖放到���处，或点击选择",
+      subtitle: "上传��争������的报价单，进行免费��� AI 驱动分析。",
+      dropzonePrompt: "将文件拖放到���处，或点��选择",
       dropzoneHint: "支持：PDF, PNG, JPG",
       analyzeButton: "分析报价单",
       analysisComplete: "分析完成",
@@ -461,7 +473,7 @@ export const translations = {
     },
     garage: {
       title: "我的车库",
-      subtitle: "您车辆的维修历史���保修信息。",
+      subtitle: "您车辆的维修���史���保修信息。",
       date: "日期",
       vendor: "维修商",
       service: "服务",
@@ -472,20 +484,20 @@ export const translations = {
       disputed: "争议中",
       completed: "已完成",
       disputeTitle: "联系协调员",
-      disputeDescription: "���述您对 {vendorName} 提供的“{service}”�����务遇到的问题。",
+      disputeDescription: "���述您��� {vendorName} 提供的“{service}”�����务遇到的问题。",
       message: "信息",
-      messagePlaceholder: "请提供有关问题的详��信息...",
+      messagePlaceholder: "请提供有关问题的详����息...",
       sendMessage: "发送信息",
       disputeSuccess: "争议提交成功。协调员将很��审核。",
       disputeFailed: "提交争议失败。",
       signInPromptTitle: "访问您的车库",
-      signInPromptDescription: "登录以查看您的服务历史和保修。",
+      signInPromptDescription: "登���以查看您的服务历史和保修。",
       signIn: "登录",
     },
     admin: {
       title: "协调员队列",
       subtitle: "需要人��审核和确认的预订。",
-      customer: "���户",
+      customer: "�����",
       vendor: "维修商",
       appointment: "预约",
       status: "状态",
@@ -493,7 +505,7 @@ export const translations = {
       emptyQueue: "审核队列为���。",
       approveBooking: "批��预订",
       contactCustomer: "联系客户",
-      addNote: "为客户添加备���",
+      addNote: "为客户添加�����",
       addNoteDescription: "您的备注将发送给 {customerName}，并且预订状态将更新为“需要操作”。",
       notes: "备注",
       notesPlaceholder: "例如，“请致电我们以确认您的车辆详情。”",

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import type { Env } from './core-utils';
 import { ok, notFound, bad } from './core-utils';
 import { VendorEntity, BookingEntity } from "./entities";
-import type { CreateBookingPayload, Booking } from "@shared/types";
+import type { CreateBookingPayload, Booking, AIIntakeResponse, AISuggestionResponse } from "@shared/types";
 import { MOCK_VENDOR_SERVICES } from "@shared/mock-data";
 export function userRoutes(app: Hono<{ Bindings: Env }>) {
   // Seed vendors on first request if needed
@@ -144,5 +144,50 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
       summary: "The quote appears reasonable, but one part is marked up higher than average. You could potentially save money by sourcing this part yourself.",
     };
     return ok(c, mockAnalysis);
+  });
+  // POST AI INTAKE (MOCK)
+  app.post('/api/ai/intake', async (c) => {
+    const { query } = await c.req.json<{ query: string }>();
+    await new Promise(res => setTimeout(res, 1000)); // Simulate AI processing
+    const lowerQuery = query.toLowerCase();
+    let searchTerm = query;
+    let category = 'all';
+    if (lowerQuery.includes('brake') || lowerQuery.includes('engine') || lowerQuery.includes('transmission')) {
+      searchTerm = 'Mechanical Repair';
+      category = 'Mechanical';
+    } else if (lowerQuery.includes('oil') || lowerQuery.includes('tire')) {
+      searchTerm = 'Quick Service';
+      category = 'Quick Service';
+    } else if (lowerQuery.includes('dent') || lowerQuery.includes('scratch') || lowerQuery.includes('windshield') || lowerQuery.includes('glass')) {
+      searchTerm = 'Body & Glass';
+      category = 'Body/Glass';
+    } else if (lowerQuery.includes('noise') || lowerQuery.includes('light') || lowerQuery.includes('check')) {
+      searchTerm = 'Diagnostics';
+      category = 'Diagnostics';
+    }
+    return ok(c, { searchTerm, category } as AIIntakeResponse);
+  });
+  // POST AI SUGGEST SERVICE (MOCK)
+  app.post('/api/ai/suggest-service', async (c) => {
+    const { vendorId, query } = await c.req.json<{ vendorId: string, query: string }>();
+    await new Promise(res => setTimeout(res, 800)); // Simulate AI processing
+    const vendorServices = MOCK_VENDOR_SERVICES[vendorId];
+    if (!vendorServices) {
+      return notFound(c, 'No services found for this vendor.');
+    }
+    const allServices = [...vendorServices.items, ...vendorServices.bundles.flatMap(b => b.items)];
+    const lowerQuery = query.toLowerCase();
+    let suggestedService = allServices[0]; // Default to first service
+    if (lowerQuery.includes('brake')) {
+      suggestedService = allServices.find(s => s.name.toLowerCase().includes('brake')) || suggestedService;
+    } else if (lowerQuery.includes('engine') || lowerQuery.includes('noise')) {
+      suggestedService = allServices.find(s => s.category === 'Diagnostics') || suggestedService;
+    } else if (lowerQuery.includes('oil')) {
+      suggestedService = allServices.find(s => s.name.toLowerCase().includes('oil')) || suggestedService;
+    }
+    return ok(c, {
+      serviceId: suggestedService.id,
+      reason: `Based on your description of "${query}", this service seems like a good starting point.`,
+    } as AISuggestionResponse);
   });
 }

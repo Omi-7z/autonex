@@ -73,3 +73,11 @@ export interface AdminBooking {
   time: string;
   status: 'Needs Review' | 'Reviewed' | 'Action Required';
 }
+export interface AIIntakeResponse {
+  searchTerm: string;
+  category: string;
+}
+export interface AISuggestionResponse {
+  serviceId: string;
+  reason: string;
+}
