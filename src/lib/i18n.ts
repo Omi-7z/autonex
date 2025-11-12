@@ -41,6 +41,7 @@ export const translations = {
       aiPrompt: "Let our AI help you get started.",
       aiPlaceholder: "Describe your issue... e.g., 'I need to change my car's engine oil.'",
       aiButton: "Find Help",
+      howItWorks: "1. Describe your problem → 2. Browse vendor results",
       categories: {
         quickService: { name: "Quick Service", description: "Oil changes, tire rotation, etc." },
         mechanical: { name: "Mechanical", description: "Engine, brakes, transmission." },
@@ -235,6 +236,7 @@ export const translations = {
       aiPrompt: "Deja que nuestra IA te ayude a empezar.",
       aiPlaceholder: "Describe tu problema... ej., 'Necesito cambiar el aceite del motor de mi coche.'",
       aiButton: "Encontrar Ayuda",
+      howItWorks: "1. Describe tu problema → 2. Explora los resultados de los talleres",
       categories: {
         quickService: { name: "Servicio Rápido", description: "Cambios de aceite, rotación de llantas, etc." },
         mechanical: { name: "Mecánica", description: "Motor, frenos, transmisión." },
@@ -429,6 +431,7 @@ export const translations = {
       aiPrompt: "让我们的 AI 帮助您���始。",
       aiPlaceholder: "描述您的问题……例如，'我需要更换我汽车的机油。'",
       aiButton: "寻求帮助",
+      howItWorks: "1. 描述您的问题 → 2. 浏览维修商结果",
       categories: {
         quickService: { name: "快速服务", description: "换油、��胎换位等。" },
         mechanical: { name: "机��维修", description: "发动机、刹车、变速箱。" },
