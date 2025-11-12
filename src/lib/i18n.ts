@@ -13,6 +13,10 @@ export const translations = {
       builtWithLove: "Built with ❤️ at Cloudflare",
       copyright: "© {year} AutoNex. All rights reserved.",
     },
+    user: {
+      signOut: "Sign Out",
+      welcome: "Welcome back, {name}!",
+    },
     onboarding: {
       slides: [
         {
@@ -136,6 +140,9 @@ export const translations = {
       sendMessage: "Send Message",
       warrantyExpired: "Expired",
       warrantyUntil: "Until {date}",
+      signInPromptTitle: "Access Your Garage",
+      signInPromptDescription: "Sign in to view your service history and warranties.",
+      signIn: "Sign In",
     },
     admin: {
       title: "Coordinator Queue",
@@ -146,8 +153,13 @@ export const translations = {
       status: "Status",
       actions: "Actions",
       emptyQueue: "The review queue is empty.",
-      approve: "Approve Booking",
-      contact: "Contact Customer",
+      approveBooking: "Approve Booking",
+      contactCustomer: "Contact Customer",
+      addNote: "Add Note for Customer",
+      addNoteDescription: "Your note will be sent to {customerName} and the booking status will be updated to 'Action Required'.",
+      notes: "Notes",
+      notesPlaceholder: "e.g., 'Please call us to confirm details about your vehicle.'",
+      submit: "Submit",
     },
   },
   es: {
@@ -164,6 +176,10 @@ export const translations = {
       builtWithLove: "Hecho con ❤️ en Cloudflare",
       copyright: "© {year} AutoNex. Todos los derechos reservados.",
     },
+    user: {
+      signOut: "Cerrar Sesión",
+      welcome: "¡Bienvenido de nuevo, {name}!",
+    },
     onboarding: {
       slides: [
         {
@@ -172,7 +188,7 @@ export const translations = {
         },
         {
           title: "¿Cómo funciona?",
-          description: "Describe tu problema, elige un taller verificado y reserva una cita de diagnóstico por una pequeña Tarifa de Confianza reembolsable.",
+          description: "Describe tu problema, elige un taller verificado y reserva una cita de diagn��stico por una pequeña Tarifa de Confianza reembolsable.",
         },
         {
           title: "Soporte Humano Real",
@@ -287,6 +303,9 @@ export const translations = {
       sendMessage: "Enviar Mensaje",
       warrantyExpired: "Expirada",
       warrantyUntil: "Hasta {date}",
+      signInPromptTitle: "Accede a Tu Garaje",
+      signInPromptDescription: "Inicia sesión para ver tu historial de servicios y garantías.",
+      signIn: "Iniciar Sesión",
     },
     admin: {
       title: "Cola del Coordinador",
@@ -297,8 +316,13 @@ export const translations = {
       status: "Estado",
       actions: "Acciones",
       emptyQueue: "La cola de revisión está vacía.",
-      approve: "Aprobar Reserva",
-      contact: "Contactar Cliente",
+      approveBooking: "Aprobar Reserva",
+      contactCustomer: "Contactar Cliente",
+      addNote: "Añadir Nota para el Cliente",
+      addNoteDescription: "Tu nota se enviará a {customerName} y el estado de la reserva se actualizará a 'Acción Requerida'.",
+      notes: "Notas",
+      notesPlaceholder: "ej., 'Por favor, llámenos para confirmar detalles sobre su vehículo.'",
+      submit: "Enviar",
     },
   },
   zh: {
@@ -309,21 +333,25 @@ export const translations = {
     },
     footer: {
       about: "关于我们",
-      contact: "联系方式",
+      contact: "联系���式",
       terms: "服务条款",
-      privacy: "隐私政策",
+      privacy: "��私政策",
       builtWithLove: "❤️ 由 Cloudflare 构建",
       copyright: "© {year} AutoNex. 版权所有。",
+    },
+    user: {
+      signOut: "登出",
+      welcome: "欢迎回���, {name}!",
     },
     onboarding: {
       slides: [
         {
-          title: "什么是 AutoNex？",
-          description: "一个由本地优质汽车维修店组成的值得信赖的网络。我们帮助您轻松找到合适的技工。",
+          title: "什么是 AutoNex��",
+          description: "一个由本地优质���车维修店组成的值得信赖的网络。我们帮助您轻松找到合适的技工。",
         },
         {
           title: "它是如���工作的？",
-          description: "���述您的问题，选择一家经过审查的维修商，并支付一笔小额可退还的“信托费”来预约诊断。",
+          description: "���述您的问题，选择一���经过审查的维修商，并支付一笔小额可退还的“信托费”来预约诊断。",
         },
         {
           title: "真人支持",
@@ -342,14 +370,14 @@ export const translations = {
       categories: {
         quickService: { name: "快速服务", description: "换油���轮胎换位等。" },
         mechanical: { name: "机械维修", description: "发��机、刹车、变速箱。" },
-        bodyGlass: { name: "车身/玻璃", description: "凹��、��缝和喷漆。" },
+        bodyGlass: { name: "车身/玻璃", description: "凹��、��缝和喷��。" },
         diagnostics: { name: "不确定/诊断", description: "让我们帮您���出问题所在。" },
       },
     },
     vendors: {
       title: "查找维修商",
       subtitle: "浏览我们值得信赖的本地维修店网络。",
-      searchLabel: "按名���或服务搜索",
+      searchLabel: "按名���或服务搜��",
       searchPlaceholder: "例如，'Precision Auto' 或 '刹车'",
       serviceTypeLabel: "服务类��",
       allServices: "所有服务",
@@ -371,7 +399,7 @@ export const translations = {
     },
     booking: {
       title: "您的预约",
-      description: "您正在预约诊断服务���维修商是：",
+      description: "您正在预约诊断服务������修商是：",
       dateLabel: "日期：",
       timeLabel: "时间：",
       notSelected: "未选择",
@@ -390,9 +418,9 @@ export const translations = {
     },
     payment: {
       title: "支付信托费",
-      description: "一笔小额可退还的费用，以确保您的诊断时段。",
+      description: "一笔小额可退还的费用，以确保您的诊断时��。",
       bookingFailed: "预订失败",
-      orPayWithCard: "或使用银���卡支付",
+      orPayWithCard: "或使用�����卡支付",
       creditOrDebit: "信用卡或借记卡",
       summaryTitle: "预约摘��",
       vendorLabel: "维修商",
@@ -407,11 +435,11 @@ export const translations = {
       title: "预订已确认！",
       description: "您的预约已���定。我们已向您的电子邮箱发送了确认信。",
       coordinatorNote: "一位 AutoNex 协调员将很��与您联系以审查您的预订。",
-      backToHome: "返回首页",
+      backToHome: "返回���页",
     },
     translate: {
       title: "翻译报价单",
-      subtitle: "上传竞争���手的报价单，进行免费的 AI 驱动分析。",
+      subtitle: "上传��争���手的报价单，进行免费的 AI 驱动分析。",
       dropzonePrompt: "将文件拖放到���处，或点击选择",
       dropzoneHint: "支持：PDF, PNG, JPG",
       analyzeButton: "分析报价单",
@@ -438,18 +466,26 @@ export const translations = {
       sendMessage: "发送信息",
       warrantyExpired: "已过期",
       warrantyUntil: "至 {date}",
+      signInPromptTitle: "访问您的车库",
+      signInPromptDescription: "登录以查看您的服务历史和保修。",
+      signIn: "登录",
     },
     admin: {
       title: "协调员队列",
-      subtitle: "需要人工审核和确认的预订。",
+      subtitle: "需要人��审核和确认的预订。",
       customer: "客户",
       vendor: "维修商",
       appointment: "预约",
       status: "状态",
-      actions: "操作",
+      actions: "操��",
       emptyQueue: "审核队列为���。",
-      approve: "批准预订",
-      contact: "联系客户",
+      approveBooking: "批准预订",
+      contactCustomer: "联系客户",
+      addNote: "为客户添加备注",
+      addNoteDescription: "您的备注将发送给 {customerName}，并且预订状态将更新为“需要操作”。",
+      notes: "备注",
+      notesPlaceholder: "例如，“请致电我们以确认您的车辆详情。”",
+      submit: "提交",
     },
   },
 };

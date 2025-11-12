@@ -6,29 +6,66 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
-import type { AdminBooking } from "@shared/types";
-import { Check, MessageSquare, MoreHorizontal } from "lucide-react";
+import type { AdminBooking, Booking } from "@shared/types";
+import { Check, MessageSquare, MoreHorizontal, Loader2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useI18n } from "@/hooks/use-i18n";
+import { toast } from "sonner";
 export function AdminPage() {
   const { t } = useI18n();
   const [queue, setQueue] = useState<AdminBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    async function fetchQueue() {
-      try {
-        setLoading(true);
-        const data = await api<AdminBooking[]>("/api/admin/review-queue");
-        setQueue(data.map(item => ({ ...item, date: new Date(item.date) })));
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch review queue");
-      } finally {
-        setLoading(false);
-      }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<AdminBooking | null>(null);
+  const [adminNotes, setAdminNotes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fetchQueue = async () => {
+    try {
+      setLoading(true);
+      const data = await api<AdminBooking[]>("/api/admin/review-queue");
+      setQueue(data.map(item => ({ ...item, date: new Date(item.date) })));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch review queue");
+    } finally {
+      setLoading(false);
     }
+  };
+  useEffect(() => {
     fetchQueue();
   }, []);
+  const handleUpdateStatus = async (bookingId: string, status: Booking['status'], notes?: string) => {
+    setIsSubmitting(true);
+    try {
+      await api(`/api/bookings/${bookingId}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status, adminNotes: notes }),
+      });
+      toast.success("Booking updated successfully!");
+      setQueue(prev => prev.filter(b => b.id !== bookingId));
+      setIsModalOpen(false);
+      setAdminNotes("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to update booking.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const handleApprove = (bookingId: string) => {
+    handleUpdateStatus(bookingId, 'confirmed');
+  };
+  const openContactModal = (booking: AdminBooking) => {
+    setSelectedBooking(booking);
+    setIsModalOpen(true);
+  };
+  const handleContactSubmit = () => {
+    if (selectedBooking) {
+      handleUpdateStatus(selectedBooking.id, 'action_required', adminNotes);
+    }
+  };
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,13 +124,13 @@ export function AdminPage() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleApprove(booking.id)}>
                                 <Check className="mr-2 h-4 w-4" />
-                                {t('admin.approve')}
+                                {t('admin.approveBooking')}
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => openContactModal(booking)}>
                                 <MessageSquare className="mr-2 h-4 w-4" />
-                                {t('admin.contact')}
+                                {t('admin.contactCustomer')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -107,6 +144,33 @@ export function AdminPage() {
           </Card>
         </div>
       </div>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{t('admin.addNote')}</DialogTitle>
+            <DialogDescription>
+              {t('admin.addNoteDescription', { customerName: selectedBooking?.customerName || 'the customer' })}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="admin-notes">{t('admin.notes')}</Label>
+              <Textarea
+                id="admin-notes"
+                placeholder={t('admin.notesPlaceholder')}
+                value={adminNotes}
+                onChange={(e) => setAdminNotes(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleContactSubmit} disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t('admin.submit')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }

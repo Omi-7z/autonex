@@ -40,8 +40,9 @@ export interface Booking {
   date: Date;
   time: string;
   needsHumanReview: boolean;
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'action_required';
   services: ServiceItem[];
+  adminNotes?: string;
 }
 export interface CreateBookingPayload {
   vendorId: string;

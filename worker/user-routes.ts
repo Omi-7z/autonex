@@ -59,6 +59,21 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     await BookingEntity.create(c.env, newBooking);
     return ok(c, newBooking);
   });
+  // UPDATE BOOKING STATUS (ADMIN)
+  app.patch('/api/bookings/:id/status', async (c) => {
+    const { id } = c.req.param();
+    const { status, adminNotes } = await c.req.json<{ status: Booking['status'], adminNotes?: string }>();
+    if (!status) {
+      return bad(c, 'Status is required.');
+    }
+    const bookingEntity = new BookingEntity(c.env, id);
+    if (!(await bookingEntity.exists())) {
+      return notFound(c, 'Booking not found');
+    }
+    await bookingEntity.patch({ status, adminNotes, needsHumanReview: false });
+    const updatedBooking = await bookingEntity.getState();
+    return ok(c, updatedBooking);
+  });
   // GET GARAGE HISTORY (still mock)
   app.get('/api/garage/history', async (c) => {
     return ok(c, MOCK_SERVICE_HISTORY);

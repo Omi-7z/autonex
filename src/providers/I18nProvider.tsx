@@ -1,11 +1,6 @@
-import React, { createContext, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getTranslator, translations, Language } from '@/lib/i18n';
-type I18nContextType = {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: string, replacements?: Record<string, string | number>) => any;
-};
-export const I18nContext = createContext<I18nContextType | undefined>(undefined);
+import { I18nContext } from './I18nContext';
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     try {
