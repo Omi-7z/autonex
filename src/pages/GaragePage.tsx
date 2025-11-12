@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
 import type { Booking } from "@shared/types";
-import { ShieldAlert, User, Loader2, Wrench } from "lucide-react";
+import { ShieldAlert, User, Loader2, Wrench, ShieldCheck, ShieldOff } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
 import { useUserStore } from "@/stores/user-store";
 import { toast } from "sonner";
@@ -119,6 +119,24 @@ export function GaragePage() {
       </CardContent>
     </Card>
   );
+  const renderWarranty = (booking: Booking) => {
+    if (!booking.warrantyExpires) {
+      return <span className="text-muted-foreground">N/A</span>;
+    }
+    const expiryDate = new Date(booking.warrantyExpires);
+    const isActive = expiryDate > new Date();
+    return isActive ? (
+      <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        <ShieldCheck className="h-4 w-4 mr-1" />
+        Active until {expiryDate.toLocaleDateString()}
+      </Badge>
+    ) : (
+      <Badge variant="outline">
+        <ShieldOff className="h-4 w-4 mr-1" />
+        Expired on {expiryDate.toLocaleDateString()}
+      </Badge>
+    );
+  };
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -146,7 +164,7 @@ export function GaragePage() {
                     <TableHead>{t('garage.date')}</TableHead>
                     <TableHead>{t('garage.vendor')}</TableHead>
                     <TableHead>{t('garage.service')}</TableHead>
-                    <TableHead className="text-right">{t('garage.cost')}</TableHead>
+                    <TableHead>Warranty</TableHead>
                     <TableHead>{t('garage.status')}</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
@@ -157,7 +175,7 @@ export function GaragePage() {
                       <TableCell><Skeleton className="h-5 w-24" /></TableCell>
                       <TableCell><Skeleton className="h-5 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                      <TableCell className="text-right"><Skeleton className="h-5 w-16 ml-auto" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-24" /></TableCell>
                       <TableCell><Skeleton className="h-8 w-24" /></TableCell>
                     </TableRow>
@@ -178,7 +196,7 @@ export function GaragePage() {
                       <TableHead>{t('garage.date')}</TableHead>
                       <TableHead>{t('garage.vendor')}</TableHead>
                       <TableHead>{t('garage.service')}</TableHead>
-                      <TableHead className="text-right">{t('garage.cost')}</TableHead>
+                      <TableHead>Warranty</TableHead>
                       <TableHead>{t('garage.status')}</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
@@ -189,7 +207,7 @@ export function GaragePage() {
                         <TableCell>{item.date.toLocaleDateString()}</TableCell>
                         <TableCell className="font-medium">{item.vendorName}</TableCell>
                         <TableCell>{item.services.map(s => s.name).join(', ')}</TableCell>
-                        <TableCell className="text-right">${item.services.reduce((acc, s) => acc + s.price, 0).toFixed(2)}</TableCell>
+                        <TableCell>{renderWarranty(item)}</TableCell>
                         <TableCell>
                           {item.dispute ? (
                               <Badge variant="destructive">{t('garage.disputed')}</Badge>

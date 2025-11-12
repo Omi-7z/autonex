@@ -34,5 +34,6 @@ export class BookingEntity extends IndexedEntity<Booking> {
     services: [],
     adminNotes: "",
     dispute: undefined,
+    warrantyExpires: undefined,
   };
 }

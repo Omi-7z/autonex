@@ -20,7 +20,8 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
         time: '09:00 AM',
         needsHumanReview: false,
         status: 'completed',
-        services: [{ id: 's2-v1', name: 'AC System Check & Recharge', description: 'Inspect for leaks and recharge refrigerant.', price: 180.00, category: 'Mechanical' }],
+        services: [{ id: 's2-v1', name: 'AC System Check & Recharge', description: 'Inspect for leaks and recharge refrigerant.', price: 180.00, category: 'Mechanical', warrantyMonths: 6 }],
+        warrantyExpires: new Date(new Date('2023-10-15').setMonth(new Date('2023-10-15').getMonth() + 6)).toISOString(),
       };
       const bookingEntity = new BookingEntity(c.env, mockCompletedBooking.id);
       if (!(await bookingEntity.exists())) {
@@ -61,6 +62,13 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     if (!payload.vendorId || !payload.date || !payload.time || !payload.services) {
       return bad(c, 'Missing required booking information.');
     }
+    const maxWarrantyMonths = Math.max(0, ...payload.services.map(s => s.warrantyMonths || 0));
+    let warrantyExpires: string | undefined = undefined;
+    if (maxWarrantyMonths > 0) {
+      const bookingDate = new Date(payload.date);
+      const expiryDate = new Date(bookingDate.setMonth(bookingDate.getMonth() + maxWarrantyMonths));
+      warrantyExpires = expiryDate.toISOString();
+    }
     const newBooking: Booking = {
       id: crypto.randomUUID(),
       userId: 'mock-user-id', // Placeholder for auth
@@ -69,8 +77,9 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
       date: new Date(payload.date),
       time: payload.time,
       needsHumanReview: payload.needsReview,
-      status: 'confirmed',
+      status: payload.needsReview ? 'pending' : 'confirmed',
       services: payload.services,
+      warrantyExpires,
     };
     await BookingEntity.create(c.env, newBooking);
     return ok(c, newBooking);
@@ -130,6 +139,11 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
       status: 'Needs Review' as const,
     }));
     return ok(c, reviewQueue);
+  });
+  // GET ALL BOOKINGS FOR ADMIN
+  app.get('/api/admin/all-bookings', async (c) => {
+    const { items } = await BookingEntity.list(c.env);
+    return ok(c, items);
   });
   // POST TRANSLATE QUOTE (MOCK)
   app.post('/api/translate-quote', async (c) => {

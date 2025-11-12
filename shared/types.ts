@@ -26,6 +26,7 @@ export interface ServiceItem {
   description: string;
   price: number;
   category: 'Quick Service' | 'Mechanical' | 'Body/Glass' | 'Diagnostics';
+  warrantyMonths?: number;
 }
 export interface ServiceBundle {
   id: string;
@@ -48,6 +49,7 @@ export interface Booking {
     reason: string;
     submittedAt: Date;
   };
+  warrantyExpires?: string; // ISO Date string
 }
 export interface CreateBookingPayload {
   vendorId: string;

@@ -125,24 +125,24 @@ export const MOCK_VENDOR_SERVICES: Record<string, { bundles: ServiceBundle[], it
   v1: { // Precision Auto Works (Mechanical Focus)
     bundles: [
       { id: 'b1-v1', name: 'Major Brake Service', description: 'Full replacement of front pads and rotors.', items: [
-        { id: 's1-v1-b', name: 'Front Brake Pad Replacement', description: 'Premium ceramic pads.', price: 250.00, category: 'Mechanical' },
-        { id: 's2-v1-b', name: 'Front Rotor Replacement', description: 'High-quality vented rotors.', price: 300.00, category: 'Mechanical' },
+        { id: 's1-v1-b', name: 'Front Brake Pad Replacement', description: 'Premium ceramic pads.', price: 250.00, category: 'Mechanical', warrantyMonths: 12 },
+        { id: 's2-v1-b', name: 'Front Rotor Replacement', description: 'High-quality vented rotors.', price: 300.00, category: 'Mechanical', warrantyMonths: 24 },
       ]},
     ],
     items: [
       { id: 's1-v1', name: 'Engine Diagnostic', description: 'Full computer diagnostic scan for check engine light.', price: 125.00, category: 'Diagnostics' },
-      { id: 's2-v1', name: 'AC System Check & Recharge', description: 'Inspect for leaks and recharge refrigerant.', price: 180.00, category: 'Mechanical' },
+      { id: 's2-v1', name: 'AC System Check & Recharge', description: 'Inspect for leaks and recharge refrigerant.', price: 180.00, category: 'Mechanical', warrantyMonths: 6 },
       { id: 's3-v1', name: 'Full Synthetic Oil Change', description: 'Up to 5 quarts of premium oil and filter.', price: 95.00, category: 'Quick Service' },
-      { id: 's4-v1', name: 'Transmission Fluid Exchange', description: 'Complete fluid replacement for automatic transmissions.', price: 220.00, category: 'Mechanical' },
+      { id: 's4-v1', name: 'Transmission Fluid Exchange', description: 'Complete fluid replacement for automatic transmissions.', price: 220.00, category: 'Mechanical', warrantyMonths: 12 },
     ],
   },
   v2: { // Savannah Bumper & Glass (Body/Glass Focus)
     bundles: [],
     items: [
-      { id: 's1-v2', name: 'Small Dent Repair (PDR)', description: 'Per panel, up to 3 inches. Paintless.', price: 175.00, category: 'Body/Glass' },
-      { id: 's2-v2', name: 'Windshield Chip Repair', description: 'Prevents cracks from spreading. Up to quarter size.', price: 110.00, category: 'Body/Glass' },
+      { id: 's1-v2', name: 'Small Dent Repair (PDR)', description: 'Per panel, up to 3 inches. Paintless.', price: 175.00, category: 'Body/Glass', warrantyMonths: 12 },
+      { id: 's2-v2', name: 'Windshield Chip Repair', description: 'Prevents cracks from spreading. Up to quarter size.', price: 110.00, category: 'Body/Glass', warrantyMonths: 6 },
       { id: 's3-v2', name: 'Headlight Restoration', description: 'Restore clarity to foggy headlights (pair).', price: 130.00, category: 'Body/Glass' },
-      { id: 's4-v2', name: 'Bumper Scuff Repair', description: 'Sand, fill, and paint minor bumper scuffs.', price: 350.00, category: 'Body/Glass' },
+      { id: 's4-v2', name: 'Bumper Scuff Repair', description: 'Sand, fill, and paint minor bumper scuffs.', price: 350.00, category: 'Body/Glass', warrantyMonths: 24 },
     ],
   },
   v3: { // Quick Lube Express (Quick Service Focus)
@@ -161,7 +161,7 @@ export const MOCK_VENDOR_SERVICES: Record<string, { bundles: ServiceBundle[], it
   v4: { // Total Car Care (All-rounder)
     bundles: [
       { id: 'b1-v4', name: 'Seasonal Prep Package', description: 'Get ready for the season ahead.', items: [
-        { id: 's1-v4-b', name: 'AC System Check', description: 'Inspect and check pressures.', price: 90.00, category: 'Mechanical' },
+        { id: 's1-v4-b', name: 'AC System Check', description: 'Inspect and check pressures.', price: 90.00, category: 'Mechanical', warrantyMonths: 3 },
         { id: 's2-v4-b', name: 'Coolant Flush', description: 'Replace old coolant.', price: 150.00, category: 'Mechanical' },
         { id: 's3-v4-b', name: 'Wiper Blade Replacement', description: 'Premium all-weather blades.', price: 55.00, category: 'Quick Service' },
       ]},
@@ -170,8 +170,8 @@ export const MOCK_VENDOR_SERVICES: Record<string, { bundles: ServiceBundle[], it
       { id: 's1-v4', name: 'Full Synthetic Oil Change', description: 'Up to 5 quarts of premium oil.', price: 92.50, category: 'Quick Service' },
       { id: 's2-v4', name: 'Engine Diagnostic', description: 'Full computer diagnostic scan.', price: 120.00, category: 'Diagnostics' },
       { id: 's3-v4', name: 'Brake Inspection', description: 'Check pads, rotors, and fluid.', price: 50.00, category: 'Mechanical' },
-      { id: 's4-v4', name: 'Wheel Alignment', description: 'Four-wheel alignment.', price: 130.00, category: 'Mechanical' },
-      { id: 's5-v4', name: 'Small Dent Repair (PDR)', description: 'Per panel, up to 3 inches.', price: 180.00, category: 'Body/Glass' },
+      { id: 's4-v4', name: 'Wheel Alignment', description: 'Four-wheel alignment.', price: 130.00, category: 'Mechanical', warrantyMonths: 6 },
+      { id: 's5-v4', name: 'Small Dent Repair (PDR)', description: 'Per panel, up to 3 inches.', price: 180.00, category: 'Body/Glass', warrantyMonths: 12 },
     ],
   },
 };
