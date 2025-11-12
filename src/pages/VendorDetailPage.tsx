@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api-client";
 import type { Vendor } from "@shared/types";
 import { Star, ShieldCheck, School, Users, ArrowLeft } from "lucide-react";
-import { useI18n } from "@/hooks/use-i18n";
 function VendorDetailSkeleton() {
   return (
     <div className="space-y-8">
@@ -53,11 +52,8 @@ function VendorDetailSkeleton() {
   );
 }
 export function VendorDetailPage() {
-  const { t } = useI18n();
   const { vendorId } = useParams<{ vendorId: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
-  const query = location.state?.query || '';
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,18 +63,18 @@ export function VendorDetailPage() {
       setLoading(false);
       return;
     }
-    async function fetchVendorData() {
+    async function fetchVendor() {
       try {
         setLoading(true);
-        const vendorData = await api<Vendor>(`/api/vendors/${vendorId}`);
-        setVendor(vendorData);
+        const data = await api<Vendor>(`/api/vendors/${vendorId}`);
+        setVendor(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch vendor details");
       } finally {
         setLoading(false);
       }
     }
-    fetchVendorData();
+    fetchVendor();
   }, [vendorId]);
   if (loading) {
     return (
@@ -94,8 +90,8 @@ export function VendorDetailPage() {
       <AppLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 lg:py-12 text-center">
           <h2 className="text-2xl font-semibold text-destructive">Error</h2>
-          <p className="text-muted-foreground">{error || t('vendorDetail.error')}</p>
-          <Button onClick={() => navigate('/vendors')} className="mt-4">{t('vendorDetail.back')}</Button>
+          <p className="text-muted-foreground">{error || "Vendor not found."}</p>
+          <Button onClick={() => navigate('/vendors')} className="mt-4">Back to Vendors</Button>
         </div>
       </AppLayout>
     );
@@ -109,7 +105,7 @@ export function VendorDetailPage() {
         <div className="py-8 md:py-10 lg:py-12">
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t('vendorDetail.back')}
+            Back to Vendors
           </Button>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 space-y-6">
@@ -124,7 +120,7 @@ export function VendorDetailPage() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>{t('vendorDetail.reviews')}</CardTitle>
+                  <CardTitle>Reviews</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
@@ -149,40 +145,40 @@ export function VendorDetailPage() {
             <div className="lg:col-span-1 sticky top-24">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t('vendorDetail.details')}</CardTitle>
+                  <CardTitle>Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{t('vendorDetail.scadRate')}</span>
+                    <span className="text-muted-foreground">SCAD Rate</span>
                     <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                       <ShieldCheck className="h-4 w-4 mr-1" />
                       {vendor.scadRate}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{t('vendorDetail.avgRating')}</span>
+                    <span className="text-muted-foreground">Avg. Rating</span>
                     <div className="flex items-center gap-1 font-semibold">
                       <Star className="h-4 w-4 text-yellow-500" />
                       {averageRating.toFixed(1)}
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{t('vendorDetail.yearsInNetwork')}</span>
+                    <span className="text-muted-foreground">Years in Network</span>
                     <span className="font-semibold">{vendor.yearsInNetwork}</span>
                   </div>
                   <Separator />
                   <div className="space-y-2">
-                    {vendor.isAlumniOwned && <Badge className="w-full justify-center"><School className="h-4 w-4 mr-2" />{t('vendors.alumniOwned')}</Badge>}
-                    {vendor.isParentOwned && <Badge className="w-full justify-center"><Users className="h-4 w-4 mr-2" />{t('vendors.parentOwned')}</Badge>}
+                    {vendor.isAlumniOwned && <Badge className="w-full justify-center"><School className="h-4 w-4 mr-2" />Alumni Owned</Badge>}
+                    {vendor.isParentOwned && <Badge className="w-full justify-center"><Users className="h-4 w-4 mr-2" />Parent Owned</Badge>}
                   </div>
                   <Separator />
                   <div>
-                    <h4 className="font-semibold mb-2">{t('vendorDetail.services')}</h4>
+                    <h4 className="font-semibold mb-2">Services</h4>
                     <div className="flex flex-wrap gap-2">
                       {vendor.services.map(service => <Badge key={service} variant="outline">{service}</Badge>)}
                     </div>
                   </div>
-                  <Button onClick={() => navigate('/book', { state: { vendor, query } })} size="lg" className="w-full mt-4 bg-brand-orange hover:bg-brand-orange/90">{t('vendorDetail.bookAppointment')}</Button>
+                  <Button onClick={() => navigate('/book', { state: { vendor } })} size="lg" className="w-full mt-4 bg-brand-orange hover:bg-brand-orange/90">Book Appointment</Button>
                 </CardContent>
               </Card>
             </div>

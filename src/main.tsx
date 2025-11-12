@@ -12,6 +12,7 @@ import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import '@/index.css'
 import { HomePage } from '@/pages/HomePage'
 import { VendorsPage } from '@/pages/VendorsPage';
+import { VendorDetailPage } from '@/pages/VendorDetailPage';
 import { BookingPage } from '@/pages/BookingPage';
 import { PaymentPage } from '@/pages/PaymentPage';
 import { ConfirmationPage } from '@/pages/ConfirmationPage';
@@ -27,6 +28,11 @@ const router = createBrowserRouter([
   {
     path: "/vendors",
     element: <VendorsPage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/vendors/:vendorId",
+    element: <VendorDetailPage />,
     errorElement: <RouteErrorBoundary />,
   },
   {

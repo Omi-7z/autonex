@@ -12,6 +12,7 @@ export interface Vendor {
   id: string;
   name: string;
   address: string;
+  description?: string;
   scadRate: number; // 1-100
   isAlumniOwned: boolean;
   isParentOwned: boolean;
