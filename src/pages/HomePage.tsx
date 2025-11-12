@@ -1,7 +1,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Onboarding } from "@/components/Onboarding";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,7 +19,6 @@ const categoryIcons = {
 };
 export function HomePage() {
   const { t } = useI18n();
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [aiQuery, setAiQuery] = useState("");
   const [isAiLoading, setIsAiLoading] = useState(false);
@@ -31,14 +29,6 @@ export function HomePage() {
     { key: "bodyGlass", ...t('home.categories.bodyGlass') },
     { key: "diagnostics", ...t('home.categories.diagnostics') },
   ];
-  useEffect(() => {
-    // Per client feedback, show onboarding every time.
-    setShowOnboarding(true);
-  }, []);
-  const handleOnboardingClose = () => {
-    // Per client feedback, do not persist onboarding state.
-    setShowOnboarding(false);
-  };
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -67,7 +57,6 @@ export function HomePage() {
   };
   return (
     <AppLayout>
-      <Onboarding open={showOnboarding} onClose={handleOnboardingClose} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16 md:py-24 lg:py-32 text-center">
           <motion.h1
