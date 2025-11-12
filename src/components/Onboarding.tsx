@@ -31,7 +31,7 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
   }, [api]);
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md p-0">
+      <DialogContent className="max-w-[90vw] sm:max-w-lg p-0 rounded-lg">
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
             {onboardingSlides.map((slide: { title: string, description: string }, index: number) => {
@@ -40,10 +40,10 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
                 <CarouselItem key={index}>
                   <div className="p-4 sm:p-6">
                     <Card className="border-none shadow-none">
-                      <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6 text-center min-h-[300px] sm:min-h-[350px]">
+                      <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6 text-center min-h-[320px] sm:min-h-[400px]">
                         <Icon className="w-12 h-12 sm:w-16 sm:h-16 text-brand-orange mb-4 sm:mb-6" />
-                        <h2 className="text-xl sm:text-2xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</h2>
-                        <p className="text-muted-foreground">{slide.description}</p>
+                        <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</h2>
+                        <p className="text-base text-muted-foreground sm:text-lg">{slide.description}</p>
                       </CardContent>
                     </Card>
                   </div>
@@ -56,7 +56,7 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
         </Carousel>
         <div className="flex justify-center p-4 pt-0">
             {current === onboardingSlides.length - 1 ? (
-                <Button onClick={onClose} className="w-full bg-brand-orange hover:bg-brand-orange/90">{t('onboarding.getStarted')}</Button>
+                <Button onClick={onClose} className="w-full sm:w-auto sm:px-8 bg-brand-orange hover:bg-brand-orange/90">{t('onboarding.getStarted')}</Button>
             ) : (
                 <div className="flex items-center gap-2">
                     {onboardingSlides.map((_: any, i: number) => (
