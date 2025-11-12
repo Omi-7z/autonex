@@ -1,4 +1,4 @@
-import type { Vendor, ServiceHistory } from './types';
+import type { Vendor, ServiceHistory, AdminBooking } from './types';
 export const MOCK_VENDORS: Vendor[] = [
   {
     id: 'v1',
@@ -93,4 +93,30 @@ export const MOCK_SERVICE_HISTORY: ServiceHistory[] = [
         cost: 75.00,
         warrantyExpires: null,
     }
+];
+export const MOCK_REVIEW_QUEUE: AdminBooking[] = [
+  {
+    id: 'b-rev-1',
+    customerName: 'Alice Johnson',
+    vendorName: 'Precision Auto Works',
+    date: new Date('2024-08-15'),
+    time: '10:00 AM',
+    status: 'Needs Review',
+  },
+  {
+    id: 'b-rev-2',
+    customerName: 'Bob Williams',
+    vendorName: 'Total Car Care',
+    date: new Date('2024-08-16'),
+    time: '02:00 PM',
+    status: 'Needs Review',
+  },
+  {
+    id: 'b-rev-3',
+    customerName: 'Charlie Brown',
+    vendorName: 'Savannah Bumper & Glass',
+    date: new Date('2024-08-17'),
+    time: '11:00 AM',
+    status: 'Needs Review',
+  },
 ];

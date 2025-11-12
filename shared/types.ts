@@ -38,3 +38,11 @@ export interface ServiceHistory {
   cost: number;
   warrantyExpires: Date | null;
 }
+export interface AdminBooking {
+  id: string;
+  customerName: string;
+  vendorName: string;
+  date: Date;
+  time: string;
+  status: 'Needs Review' | 'Reviewed' | 'Action Required';
+}
