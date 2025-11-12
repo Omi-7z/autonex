@@ -117,9 +117,36 @@ export function HomePage() {
               );
             })}
           </div>
-           <p className="text-center text-muted-foreground mt-8 text-sm font-medium tracking-wider">
-            {t('home.howItWorks')}
-          </p>
+          <div className="py-16 md:py-24 lg:py-32">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-center"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-navy dark:text-white">
+                {t('home.howItWorksSection.title')}
+              </h2>
+            </motion.div>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              {t('home.howItWorksSection.steps').map((step: { title: string; description: string }, index: number) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                >
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-brand-orange text-white font-bold text-xl">
+                      {index + 1}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-brand-navy dark:text-white">{step.title}</h3>
+                  <p className="mt-2 text-muted-foreground">{step.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </AppLayout>
