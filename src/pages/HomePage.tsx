@@ -32,21 +32,11 @@ export function HomePage() {
     { key: "diagnostics", ...t('home.categories.diagnostics') },
   ];
   useEffect(() => {
-    try {
-      const hasOnboarded = localStorage.getItem("anx_onboarded");
-      if (hasOnboarded !== "true") {
-        setShowOnboarding(true);
-      }
-    } catch (error) {
-      console.error("Could not access localStorage:", error);
-    }
+    // Per client feedback, show onboarding every time.
+    setShowOnboarding(true);
   }, []);
   const handleOnboardingClose = () => {
-    try {
-      localStorage.setItem("anx_onboarded", "true");
-    } catch (error) {
-      console.error("Could not write to localStorage:", error);
-    }
+    // Per client feedback, do not persist onboarding state.
     setShowOnboarding(false);
   };
   const handleSearch = (e: FormEvent) => {
