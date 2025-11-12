@@ -51,7 +51,7 @@ export function TranslatePage() {
       formData.append("quote", file);
       const result = await api<AnalysisResult>("/api/translate-quote", {
         method: "POST",
-        body: formData, // In a real app, you'd send the form data
+        body: formData,
       });
       clearInterval(timer);
       setProgress(100);
