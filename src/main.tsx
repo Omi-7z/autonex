@@ -19,6 +19,7 @@ import { ConfirmationPage } from '@/pages/ConfirmationPage';
 import { TranslatePage } from '@/pages/TranslatePage';
 import { GaragePage } from '@/pages/GaragePage';
 import { AdminPage } from '@/pages/AdminPage';
+import { I18nProvider } from './hooks/use-i18n';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -70,7 +71,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <RouterProvider router={router} />
+      <I18nProvider>
+        <RouterProvider router={router} />
+      </I18nProvider>
     </ErrorBoundary>
   </StrictMode>,
 )

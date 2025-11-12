@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api-client";
 import type { Vendor } from "@shared/types";
 import { Star, ShieldCheck, School, Users, ArrowLeft } from "lucide-react";
+import { useI18n } from "@/hooks/use-i18n";
 function VendorDetailSkeleton() {
   return (
     <div className="space-y-8">
@@ -52,6 +53,7 @@ function VendorDetailSkeleton() {
   );
 }
 export function VendorDetailPage() {
+  const { t } = useI18n();
   const { vendorId } = useParams<{ vendorId: string }>();
   const navigate = useNavigate();
   const [vendor, setVendor] = useState<Vendor | null>(null);
@@ -90,8 +92,8 @@ export function VendorDetailPage() {
       <AppLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 lg:py-12 text-center">
           <h2 className="text-2xl font-semibold text-destructive">Error</h2>
-          <p className="text-muted-foreground">{error || "Vendor not found."}</p>
-          <Button onClick={() => navigate('/vendors')} className="mt-4">Back to Vendors</Button>
+          <p className="text-muted-foreground">{error || t('vendorDetail.error')}</p>
+          <Button onClick={() => navigate('/vendors')} className="mt-4">{t('vendorDetail.back')}</Button>
         </div>
       </AppLayout>
     );
@@ -105,7 +107,7 @@ export function VendorDetailPage() {
         <div className="py-8 md:py-10 lg:py-12">
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Vendors
+            {t('vendorDetail.back')}
           </Button>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 space-y-6">
@@ -120,7 +122,7 @@ export function VendorDetailPage() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Reviews</CardTitle>
+                  <CardTitle>{t('vendorDetail.reviews')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
@@ -145,40 +147,40 @@ export function VendorDetailPage() {
             <div className="lg:col-span-1 sticky top-24">
               <Card>
                 <CardHeader>
-                  <CardTitle>Details</CardTitle>
+                  <CardTitle>{t('vendorDetail.details')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">SCAD Rate</span>
+                    <span className="text-muted-foreground">{t('vendorDetail.scadRate')}</span>
                     <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                       <ShieldCheck className="h-4 w-4 mr-1" />
                       {vendor.scadRate}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Avg. Rating</span>
+                    <span className="text-muted-foreground">{t('vendorDetail.avgRating')}</span>
                     <div className="flex items-center gap-1 font-semibold">
                       <Star className="h-4 w-4 text-yellow-500" />
                       {averageRating.toFixed(1)}
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Years in Network</span>
+                    <span className="text-muted-foreground">{t('vendorDetail.yearsInNetwork')}</span>
                     <span className="font-semibold">{vendor.yearsInNetwork}</span>
                   </div>
                   <Separator />
                   <div className="space-y-2">
-                    {vendor.isAlumniOwned && <Badge className="w-full justify-center"><School className="h-4 w-4 mr-2" />Alumni Owned</Badge>}
-                    {vendor.isParentOwned && <Badge className="w-full justify-center"><Users className="h-4 w-4 mr-2" />Parent Owned</Badge>}
+                    {vendor.isAlumniOwned && <Badge className="w-full justify-center"><School className="h-4 w-4 mr-2" />{t('vendors.alumniOwned')}</Badge>}
+                    {vendor.isParentOwned && <Badge className="w-full justify-center"><Users className="h-4 w-4 mr-2" />{t('vendors.parentOwned')}</Badge>}
                   </div>
                   <Separator />
                   <div>
-                    <h4 className="font-semibold mb-2">Services</h4>
+                    <h4 className="font-semibold mb-2">{t('vendorDetail.services')}</h4>
                     <div className="flex flex-wrap gap-2">
                       {vendor.services.map(service => <Badge key={service} variant="outline">{service}</Badge>)}
                     </div>
                   </div>
-                  <Button onClick={() => navigate('/book', { state: { vendor } })} size="lg" className="w-full mt-4 bg-brand-orange hover:bg-brand-orange/90">Book Appointment</Button>
+                  <Button onClick={() => navigate('/book', { state: { vendor } })} size="lg" className="w-full mt-4 bg-brand-orange hover:bg-brand-orange/90">{t('vendorDetail.bookAppointment')}</Button>
                 </CardContent>
               </Card>
             </div>

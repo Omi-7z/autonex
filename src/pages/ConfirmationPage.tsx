@@ -5,7 +5,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/stores/booking-store";
 import { CheckCircle, Calendar, Clock, MapPin } from "lucide-react";
+import { useI18n } from "@/hooks/use-i18n";
 export function ConfirmationPage() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const booking = useBookingStore((state) => state.booking);
   const clearBooking = useBookingStore((state) => state.clearBooking);
@@ -13,13 +15,12 @@ export function ConfirmationPage() {
     if (!booking) {
       navigate('/', { replace: true });
     }
-    // Clear booking details when the user navigates away from this page
     return () => {
       clearBooking();
     };
   }, [booking, navigate, clearBooking]);
   if (!booking) {
-    return null; // or a loading spinner
+    return null;
   }
   return (
     <AppLayout>
@@ -30,8 +31,8 @@ export function ConfirmationPage() {
               <div className="mx-auto bg-green-100 dark:bg-green-900 rounded-full p-3 w-fit">
                 <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
               </div>
-              <CardTitle className="text-3xl font-bold mt-4">Booking Confirmed!</CardTitle>
-              <CardDescription>Your appointment is set. We've sent a confirmation to your email.</CardDescription>
+              <CardTitle className="text-3xl font-bold mt-4">{t('confirmation.title')}</CardTitle>
+              <CardDescription>{t('confirmation.description')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 pt-4">
               <div className="border rounded-lg p-4 bg-muted/50">
@@ -52,11 +53,11 @@ export function ConfirmationPage() {
                 </div>
               </div>
               {booking.needsReview && (
-                <p className="text-center text-sm text-muted-foreground">An AutoNex Coordinator will be in touch shortly to review your booking.</p>
+                <p className="text-center text-sm text-muted-foreground">{t('confirmation.coordinatorNote')}</p>
               )}
             </CardContent>
             <CardFooter>
-              <Button onClick={() => navigate('/')} className="w-full" variant="outline">Back to Home</Button>
+              <Button onClick={() => navigate('/')} className="w-full" variant="outline">{t('confirmation.backToHome')}</Button>
             </CardFooter>
           </Card>
         </div>

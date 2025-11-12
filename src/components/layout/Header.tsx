@@ -3,12 +3,15 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Wrench } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-const navLinks = [
-  { to: "/vendors", label: "Find a Vendor" },
-  { to: "/translate", label: "Translate a Quote" },
-  { to: "/garage", label: "My Garage" },
-];
+import { useI18n } from "@/hooks/use-i18n";
+import { LANGUAGES } from "@/lib/i18n";
 export function Header() {
+  const { t, language, setLanguage } = useI18n();
+  const navLinks = [
+    { to: "/vendors", label: t('header.findVendor') },
+    { to: "/translate", label: t('header.translateQuote') },
+    { to: "/garage", label: t('header.myGarage') },
+  ];
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,9 +37,17 @@ export function Header() {
           </nav>
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-1 border-r pr-2 mr-2">
-                <Button variant="ghost" size="sm">EN</Button>
-                <Button variant="ghost" size="sm" className="text-muted-foreground">ES</Button>
-                <Button variant="ghost" size="sm" className="text-muted-foreground">中文</Button>
+              {LANGUAGES.map(lang => (
+                <Button 
+                  key={lang.key} 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setLanguage(lang.key)}
+                  className={language === lang.key ? 'text-foreground font-semibold' : 'text-muted-foreground'}
+                >
+                  {lang.label}
+                </Button>
+              ))}
             </div>
             <ThemeToggle className="relative" />
             <Sheet>

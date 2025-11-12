@@ -1,18 +1,20 @@
 import { useState, useCallback } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDropzone } from "react-dropzone";
 import { UploadCloud, File, X, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
 import { api } from "@/lib/api-client";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { useI18n } from "@/hooks/use-i18n";
 type AnalysisResult = {
   totalCost: number;
   lineItems: { item: string; cost: number; notes: string }[];
   summary: string;
 };
 export function TranslatePage() {
+  const { t } = useI18n();
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +37,6 @@ export function TranslatePage() {
     if (!file) return;
     setStatus('uploading');
     setError(null);
-    // Simulate upload progress
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -43,7 +44,7 @@ export function TranslatePage() {
           return 100;
         }
         const diff = Math.random() * 20;
-        return Math.min(oldProgress + diff, 90); // Stop at 90% until API returns
+        return Math.min(oldProgress + diff, 90);
       });
     }, 200);
     try {
@@ -75,8 +76,8 @@ export function TranslatePage() {
         <div className="py-8 md:py-10 lg:py-12">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-brand-navy dark:text-white">Translate a Quote</h1>
-              <p className="text-lg text-muted-foreground mt-2">Upload a competitor's quote for a free, AI-powered analysis.</p>
+              <h1 className="text-4xl font-bold text-brand-navy dark:text-white">{t('translate.title')}</h1>
+              <p className="text-lg text-muted-foreground mt-2">{t('translate.subtitle')}</p>
             </div>
             <Card>
               <CardContent className="p-6">
@@ -84,8 +85,8 @@ export function TranslatePage() {
                   <div {...getRootProps()} className={`p-12 border-2 border-dashed rounded-lg text-center cursor-pointer transition-colors ${isDragActive ? 'border-brand-orange bg-orange-50 dark:bg-orange-900/20' : 'border-border hover:border-brand-orange/50'}`}>
                     <input {...getInputProps()} />
                     <UploadCloud className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <p className="font-semibold">Drag & drop a file here, or click to select</p>
-                    <p className="text-sm text-muted-foreground mt-1">Supports: PDF, PNG, JPG</p>
+                    <p className="font-semibold">{t('translate.dropzonePrompt')}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{t('translate.dropzoneHint')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -104,7 +105,7 @@ export function TranslatePage() {
                     {status === 'uploading' && <Progress value={progress} className="w-full" />}
                     <Button onClick={handleUpload} disabled={status === 'uploading'} className="w-full bg-brand-orange hover:bg-brand-orange/90">
                       {status === 'uploading' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Analyze Quote
+                      {t('translate.analyzeButton')}
                     </Button>
                   </div>
                 )}
@@ -112,20 +113,18 @@ export function TranslatePage() {
             </Card>
             {status === 'success' && analysis && (
               <Card className="mt-8 animate-fade-in">
-                <CardHeader>
+                <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-6 w-6 text-green-500" />
-                    <CardTitle>Analysis Complete</CardTitle>
+                    <h2 className="text-xl font-bold">{t('translate.analysisComplete')}</h2>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
                   <div>
-                    <h3 className="font-semibold text-lg">Summary</h3>
+                    <h3 className="font-semibold text-lg">{t('translate.summary')}</h3>
                     <p className="text-muted-foreground">{analysis.summary}</p>
                   </div>
                   <Separator />
                   <div>
-                    <h3 className="font-semibold text-lg">Line Items</h3>
+                    <h3 className="font-semibold text-lg">{t('translate.lineItems')}</h3>
                     <ul className="space-y-2 mt-2">
                       {analysis.lineItems.map((item, index) => (
                         <li key={index} className="p-3 border rounded-md bg-muted/50">
@@ -139,7 +138,7 @@ export function TranslatePage() {
                     </ul>
                   </div>
                   <div className="text-right font-bold text-xl">
-                    Total: ${analysis.totalCost.toFixed(2)}
+                    {t('translate.total')} ${analysis.totalCost.toFixed(2)}
                   </div>
                 </CardContent>
               </Card>
@@ -148,7 +147,7 @@ export function TranslatePage() {
               <div className="mt-8 flex items-center gap-3 p-4 border rounded-lg bg-destructive/10 text-destructive">
                 <AlertTriangle className="h-6 w-6" />
                 <div>
-                  <h4 className="font-semibold">Analysis Failed</h4>
+                  <h4 className="font-semibold">{t('translate.analysisFailed')}</h4>
                   <p className="text-sm">{error}</p>
                 </div>
               </div>

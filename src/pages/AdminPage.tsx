@@ -9,7 +9,9 @@ import { api } from "@/lib/api-client";
 import type { AdminBooking } from "@shared/types";
 import { Check, MessageSquare, MoreHorizontal } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useI18n } from "@/hooks/use-i18n";
 export function AdminPage() {
+  const { t } = useI18n();
   const [queue, setQueue] = useState<AdminBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,18 +33,18 @@ export function AdminPage() {
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8 md:py-10 lg:py-12">
-          <h1 className="text-4xl font-bold text-brand-navy dark:text-white mb-2">Coordinator Queue</h1>
-          <p className="text-lg text-muted-foreground mb-8">Bookings that require manual review and confirmation.</p>
+          <h1 className="text-4xl font-bold text-brand-navy dark:text-white mb-2">{t('admin.title')}</h1>
+          <p className="text-lg text-muted-foreground mb-8">{t('admin.subtitle')}</p>
           <Card>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Vendor</TableHead>
-                    <TableHead>Appointment</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t('admin.customer')}</TableHead>
+                    <TableHead>{t('admin.vendor')}</TableHead>
+                    <TableHead>{t('admin.appointment')}</TableHead>
+                    <TableHead>{t('admin.status')}</TableHead>
+                    <TableHead className="text-right">{t('admin.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -62,7 +64,7 @@ export function AdminPage() {
                     </TableRow>
                   ) : queue.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-12">The review queue is empty.</TableCell>
+                      <TableCell colSpan={5} className="text-center text-muted-foreground py-12">{t('admin.emptyQueue')}</TableCell>
                     </TableRow>
                   ) : (
                     queue.map((booking) => (
@@ -87,11 +89,11 @@ export function AdminPage() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem>
                                 <Check className="mr-2 h-4 w-4" />
-                                Approve Booking
+                                {t('admin.approve')}
                               </DropdownMenuItem>
                               <DropdownMenuItem>
                                 <MessageSquare className="mr-2 h-4 w-4" />
-                                Contact Customer
+                                {t('admin.contact')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
