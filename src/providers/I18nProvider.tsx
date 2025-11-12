@@ -1,6 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useEffect, useMemo } from 'react';
 import { getTranslator, translations, Language } from '@/lib/i18n';
-import { I18nContext } from './I18nContext';
+type I18nContextType = {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: string, replacements?: Record<string, string | number>) => any;
+};
+export const I18nContext = createContext<I18nContextType | undefined>(undefined);
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     try {

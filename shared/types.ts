@@ -20,6 +20,18 @@ export interface Vendor {
   reviews: Review[];
   services: string[]; // e.g., ["Oil Change", "Brake Repair"]
 }
+export interface ServiceItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
+export interface ServiceBundle {
+  id: string;
+  name: string;
+  description: string;
+  items: ServiceItem[];
+}
 export interface Booking {
   id: string;
   vendorId: string;
@@ -29,6 +41,7 @@ export interface Booking {
   time: string;
   needsHumanReview: boolean;
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  services: ServiceItem[];
 }
 export interface CreateBookingPayload {
   vendorId: string;
@@ -36,6 +49,7 @@ export interface CreateBookingPayload {
   date: string; // ISO string
   time: string;
   needsReview: boolean;
+  services: ServiceItem[];
 }
 export interface ServiceHistory {
   id: string;

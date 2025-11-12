@@ -38,10 +38,10 @@ export function Header() {
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-1 border-r pr-2 mr-2">
               {LANGUAGES.map(lang => (
-                <Button 
-                  key={lang.key} 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  key={lang.key}
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setLanguage(lang.key)}
                   className={language === lang.key ? 'text-foreground font-semibold' : 'text-muted-foreground'}
                 >

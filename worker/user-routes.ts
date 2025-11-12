@@ -3,7 +3,7 @@ import type { Env } from './core-utils';
 import { ok, notFound, bad } from './core-utils';
 import { VendorEntity, BookingEntity } from "./entities";
 import type { CreateBookingPayload, Booking } from "@shared/types";
-import { MOCK_SERVICE_HISTORY } from "@shared/mock-data";
+import { MOCK_SERVICE_HISTORY, MOCK_VENDOR_SERVICES } from "@shared/mock-data";
 export function userRoutes(app: Hono<{ Bindings: Env }>) {
   // Seed vendors on first request if needed
   let seeded = false;
@@ -30,10 +30,19 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     const vendor = await vendorEntity.getState();
     return ok(c, vendor);
   });
+  // GET VENDOR SERVICES
+  app.get('/api/vendors/:id/services', async (c) => {
+    const { id } = c.req.param();
+    const services = MOCK_VENDOR_SERVICES[id];
+    if (!services) {
+      return ok(c, { bundles: [], items: [] });
+    }
+    return ok(c, services);
+  });
   // CREATE BOOKING
   app.post('/api/bookings', async (c) => {
     const payload = await c.req.json<CreateBookingPayload>();
-    if (!payload.vendorId || !payload.date || !payload.time) {
+    if (!payload.vendorId || !payload.date || !payload.time || !payload.services) {
       return bad(c, 'Missing required booking information.');
     }
     const newBooking: Booking = {
@@ -45,6 +54,7 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
       time: payload.time,
       needsHumanReview: payload.needsReview,
       status: 'confirmed',
+      services: payload.services,
     };
     await BookingEntity.create(c.env, newBooking);
     return ok(c, newBooking);

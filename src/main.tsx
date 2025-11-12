@@ -19,7 +19,7 @@ import { ConfirmationPage } from '@/pages/ConfirmationPage';
 import { TranslatePage } from '@/pages/TranslatePage';
 import { GaragePage } from '@/pages/GaragePage';
 import { AdminPage } from '@/pages/AdminPage';
-import { I18nProvider } from './hooks/use-i18n';
+import { I18nProvider } from '@/providers/I18nProvider';
 const router = createBrowserRouter([
   {
     path: "/",

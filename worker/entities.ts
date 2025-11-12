@@ -31,5 +31,6 @@ export class BookingEntity extends IndexedEntity<Booking> {
     time: "",
     needsHumanReview: false,
     status: 'pending',
+    services: [],
   };
 }

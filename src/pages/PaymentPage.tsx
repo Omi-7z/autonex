@@ -33,6 +33,7 @@ export function PaymentPage() {
         date: booking.date.toISOString(),
         time: booking.time,
         needsReview: booking.needsReview,
+        services: booking.services,
       };
       await api('/api/bookings', {
         method: 'POST',
@@ -48,6 +49,7 @@ export function PaymentPage() {
   if (!booking) {
     return null;
   }
+  const estimatedTotal = booking.services.reduce((acc, service) => acc + service.price, 0);
   const PaymentButton = ({ children, ...props }: React.ComponentProps<typeof Button>) => (
     <Button onClick={handlePayment} size="lg" disabled={isProcessing} {...props}>
       {isProcessing ? <Loader2 className="h-5 w-5 mr-2 animate-spin" /> : children}
@@ -110,6 +112,13 @@ export function PaymentPage() {
                   <p className="text-sm text-muted-foreground">{t('payment.dateTimeLabel')}</p>
                   <p className="font-semibold">{booking.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at {booking.time}</p>
                 </div>
+                <Separator />
+                <div>
+                  <p className="text-sm text-muted-foreground">{t('payment.selectedServices')}</p>
+                  <ul className="font-semibold list-disc list-inside">
+                    {booking.services.map(s => <li key={s.id}>{s.name}</li>)}
+                  </ul>
+                </div>
                 {booking.needsReview && (
                   <>
                     <Separator />
@@ -119,6 +128,11 @@ export function PaymentPage() {
                     </div>
                   </>
                 )}
+                <Separator />
+                <div className="flex justify-between items-baseline">
+                  <span className="font-semibold">{t('payment.estimatedTotal')}</span>
+                  <span className="text-lg font-bold text-brand-navy dark:text-white">${estimatedTotal.toFixed(2)}</span>
+                </div>
               </CardContent>
               <CardFooter className="flex justify-between items-baseline bg-muted/80 p-4 rounded-b-lg">
                 <span className="font-semibold">{t('payment.feeLabel')}</span>

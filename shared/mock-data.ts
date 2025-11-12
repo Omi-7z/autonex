@@ -1,4 +1,4 @@
-import type { Vendor, ServiceHistory, AdminBooking } from './types';
+import type { Vendor, ServiceHistory, AdminBooking, ServiceBundle, ServiceItem } from './types';
 export const MOCK_VENDORS: Vendor[] = [
   {
     id: 'v1',
@@ -120,3 +120,50 @@ export const MOCK_REVIEW_QUEUE: AdminBooking[] = [
     status: 'Needs Review',
   },
 ];
+export const MOCK_VENDOR_SERVICES: Record<string, { bundles: ServiceBundle[], items: ServiceItem[] }> = {
+  v1: {
+    bundles: [
+      { id: 'b1-v1', name: 'Major Service', description: 'Comprehensive check-up including oil, filters, and diagnostics.', items: [
+        { id: 's1-v1', name: 'Full Synthetic Oil Change', description: 'Up to 5 quarts of premium oil.', price: 89.99 },
+        { id: 's2-v1', name: 'Engine Diagnostic', description: 'Full computer diagnostic scan.', price: 120.00 },
+        { id: 's3-v1', name: 'Brake Inspection', description: 'Check pads, rotors, and fluid.', price: 50.00 },
+      ]},
+    ],
+    items: [
+      { id: 's4-v1', name: 'Tire Rotation', description: 'Rotate and balance all four tires.', price: 45.00 },
+      { id: 's5-v1', name: 'AC System Check', description: 'Inspect and recharge AC system.', price: 150.00 },
+    ],
+  },
+  v2: {
+    bundles: [],
+    items: [
+      { id: 's1-v2', name: 'Dent Repair (Small)', description: 'Per panel, up to 3 inches.', price: 150.00 },
+      { id: 's2-v2', name: 'Windshield Chip Repair', description: 'Prevents cracks from spreading.', price: 99.00 },
+      { id: 's3-v2', name: 'Headlight Restoration', description: 'Restore clarity to foggy headlights.', price: 120.00 },
+    ],
+  },
+  v3: {
+    bundles: [
+      { id: 'b1-v3', name: 'The Works', description: 'Oil change, tire rotation, and fluid top-off.', items: [
+        { id: 's1-v3', name: 'Full Synthetic Oil Change', description: 'Up to 5 quarts of premium oil.', price: 89.99 },
+        { id: 's2-v3', name: 'Tire Rotation', description: 'Rotate and balance all four tires.', price: 45.00 },
+      ]},
+    ],
+    items: [
+      { id: 's3-v3', name: 'Wiper Blade Replacement', description: 'Premium all-weather blades.', price: 35.00 },
+    ],
+  },
+  v4: {
+    bundles: [
+      { id: 'b1-v4', name: 'Seasonal Prep', description: 'Get ready for the season ahead.', items: [
+        { id: 's1-v4', name: 'AC System Check', description: 'Inspect and recharge AC system.', price: 150.00 },
+        { id: 's2-v4', name: 'Coolant Flush', description: 'Replace old coolant.', price: 120.00 },
+      ]},
+    ],
+    items: [
+      { id: 's3-v4', name: 'Full Synthetic Oil Change', description: 'Up to 5 quarts of premium oil.', price: 89.99 },
+      { id: 's4-v4', name: 'Engine Diagnostic', description: 'Full computer diagnostic scan.', price: 120.00 },
+      { id: 's5-v4', name: 'Brake Inspection', description: 'Check pads, rotors, and fluid.', price: 50.00 },
+    ],
+  },
+};
