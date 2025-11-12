@@ -1,27 +1,58 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/stores/booking-store";
 import { Separator } from "@/components/ui/separator";
-import { Apple, CreditCard } from "lucide-react";
+import { Apple, CreditCard, Loader2 } from "lucide-react";
+import { api } from "@/lib/api-client";
+import type { CreateBookingPayload } from "@shared/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 export function PaymentPage() {
   const navigate = useNavigate();
   const booking = useBookingStore((state) => state.booking);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!booking) {
       navigate('/vendors', { replace: true });
     }
   }, [booking, navigate]);
-  const handlePayment = () => {
-    // Here you would integrate a real payment provider.
-    // For this mock, we'll just navigate to confirmation.
-    navigate('/confirm');
+  const handlePayment = async () => {
+    if (!booking) return;
+    setIsProcessing(true);
+    setError(null);
+    try {
+      const payload: CreateBookingPayload = {
+        vendorId: booking.vendor.id,
+        vendorName: booking.vendor.name,
+        date: booking.date.toISOString(),
+        time: booking.time,
+        needsReview: booking.needsReview,
+      };
+      await api('/api/bookings', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      // In a real app, payment processing would happen before this.
+      // For this mock, we'll just navigate to confirmation.
+      navigate('/confirm');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unknown error occurred during booking.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
   if (!booking) {
     return null; // or a loading spinner
   }
+  const PaymentButton = ({ children, ...props }: React.ComponentProps<typeof Button>) => (
+    <Button onClick={handlePayment} size="lg" disabled={isProcessing} {...props}>
+      {isProcessing ? <Loader2 className="h-5 w-5 mr-2 animate-spin" /> : children}
+    </Button>
+  );
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,15 +64,22 @@ export function PaymentPage() {
                 <CardDescription>A small, refundable fee to secure your diagnostic slot.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button onClick={handlePayment} className="w-full bg-black hover:bg-black/90 text-white" size="lg">
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Booking Failed</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                <PaymentButton className="w-full bg-black hover:bg-black/90 text-white">
                   <Apple className="h-5 w-5 mr-2" /> Apple Pay
-                </Button>
-                <Button onClick={handlePayment} className="w-full bg-gray-200 hover:bg-gray-300 text-black" size="lg">
+                </PaymentButton>
+                <PaymentButton className="w-full bg-gray-200 hover:bg-gray-300 text-black">
                   Google Pay
-                </Button>
-                <Button onClick={handlePayment} className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="lg">
+                </PaymentButton>
+                <PaymentButton className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                   PayPal
-                </Button>
+                </PaymentButton>
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
@@ -52,9 +90,9 @@ export function PaymentPage() {
                     </span>
                   </div>
                 </div>
-                <Button onClick={handlePayment} variant="outline" className="w-full" size="lg">
+                <PaymentButton variant="outline" className="w-full">
                   <CreditCard className="h-5 w-5 mr-2" /> Credit or Debit Card
-                </Button>
+                </PaymentButton>
               </CardContent>
             </Card>
             <Card className="bg-muted/50">

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -73,10 +73,11 @@ function VendorSkeleton() {
     )
 }
 export function VendorsPage() {
+  const [searchParams] = useSearchParams();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || "");
   const [serviceFilter, setServiceFilter] = useState("all");
   const [isAlumniOwned, setIsAlumniOwned] = useState(false);
   const [isParentOwned, setIsParentOwned] = useState(false);
@@ -96,8 +97,10 @@ export function VendorsPage() {
   }, []);
   const filteredVendors = useMemo(() => {
     return vendors.filter(vendor => {
-      const matchesSearch = vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            vendor.services.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      const matchesSearch = vendor.name.toLowerCase().includes(lowerSearchTerm) ||
+                            vendor.description?.toLowerCase().includes(lowerSearchTerm) ||
+                            vendor.services.some(s => s.toLowerCase().includes(lowerSearchTerm));
       const matchesService = serviceFilter === 'all' || vendor.services.includes(serviceFilter);
       const matchesAlumni = !isAlumniOwned || vendor.isAlumniOwned;
       const matchesParent = !isParentOwned || vendor.isParentOwned;

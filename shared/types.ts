@@ -23,12 +23,19 @@ export interface Vendor {
 export interface Booking {
   id: string;
   vendorId: string;
+  vendorName: string;
   userId: string;
-  service: string;
-  slot: Date;
+  date: Date;
+  time: string;
   needsHumanReview: boolean;
-  trustFee: number;
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+}
+export interface CreateBookingPayload {
+  vendorId: string;
+  vendorName: string;
+  date: string; // ISO string
+  time: string;
+  needsReview: boolean;
 }
 export interface ServiceHistory {
   id: string;
