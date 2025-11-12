@@ -28,6 +28,7 @@ export function BookingPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const vendor = location.state?.vendor as Vendor | undefined;
+  const query = location.state?.query as string || '';
   const [step, setStep] = useState<'services' | 'datetime'>('services');
   const [selectedServices, setSelectedServices] = useState<ServiceItem[]>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -101,7 +102,7 @@ export function BookingPage() {
             </div>
             <div className="lg:col-span-2 space-y-8">
               {step === 'services' && (
-                <ServiceSelection vendorId={vendor.id} selectedServices={selectedServices} onSelectionChange={setSelectedServices} />
+                <ServiceSelection vendorId={vendor.id} selectedServices={selectedServices} onSelectionChange={setSelectedServices} query={query} />
               )}
               {step === 'datetime' && (
                 <>

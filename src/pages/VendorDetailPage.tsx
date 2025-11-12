@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api-client";
-import type { Vendor, AISuggestionResponse, ServiceItem } from "@shared/types";
-import { Star, ShieldCheck, School, Users, ArrowLeft, Bot } from "lucide-react";
+import type { Vendor } from "@shared/types";
+import { Star, ShieldCheck, School, Users, ArrowLeft } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
 function VendorDetailSkeleton() {
   return (
@@ -61,8 +61,6 @@ export function VendorDetailPage() {
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [aiSuggestion, setAiSuggestion] = useState<AISuggestionResponse | null>(null);
-  const [vendorServices, setVendorServices] = useState<ServiceItem[]>([]);
   useEffect(() => {
     if (!vendorId) {
       setError("Vendor ID is missing.");
@@ -72,19 +70,8 @@ export function VendorDetailPage() {
     async function fetchVendorData() {
       try {
         setLoading(true);
-        const [vendorData, servicesData] = await Promise.all([
-          api<Vendor>(`/api/vendors/${vendorId}`),
-          api<{ bundles: any[], items: ServiceItem[] }>(`/api/vendors/${vendorId}/services`)
-        ]);
+        const vendorData = await api<Vendor>(`/api/vendors/${vendorId}`);
         setVendor(vendorData);
-        setVendorServices(servicesData.items);
-        if (query) {
-          const suggestion = await api<AISuggestionResponse>('/api/ai/suggest-service', {
-            method: 'POST',
-            body: JSON.stringify({ vendorId, query }),
-          });
-          setAiSuggestion(suggestion);
-        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch vendor details");
       } finally {
@@ -92,7 +79,7 @@ export function VendorDetailPage() {
       }
     }
     fetchVendorData();
-  }, [vendorId, query]);
+  }, [vendorId]);
   if (loading) {
     return (
       <AppLayout>
@@ -116,7 +103,6 @@ export function VendorDetailPage() {
   const averageRating = vendor.reviews.length > 0
     ? vendor.reviews.reduce((acc, r) => acc + r.rating, 0) / vendor.reviews.length
     : 0;
-  const suggestedService = aiSuggestion ? vendorServices.find(s => s.id === aiSuggestion.serviceId) : null;
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,23 +113,6 @@ export function VendorDetailPage() {
           </Button>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 space-y-6">
-              {suggestedService && aiSuggestion && (
-                <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Bot className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      {t('vendorDetail.aiSuggestion')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground italic mb-2">"{aiSuggestion.reason}"</p>
-                    <div className="p-3 border rounded-md bg-background">
-                      <p className="font-semibold">{suggestedService.name}</p>
-                      <p className="text-sm text-muted-foreground">{suggestedService.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-3xl font-bold">{vendor.name}</CardTitle>
@@ -213,7 +182,7 @@ export function VendorDetailPage() {
                       {vendor.services.map(service => <Badge key={service} variant="outline">{service}</Badge>)}
                     </div>
                   </div>
-                  <Button onClick={() => navigate('/book', { state: { vendor } })} size="lg" className="w-full mt-4 bg-brand-orange hover:bg-brand-orange/90">{t('vendorDetail.bookAppointment')}</Button>
+                  <Button onClick={() => navigate('/book', { state: { vendor, query } })} size="lg" className="w-full mt-4 bg-brand-orange hover:bg-brand-orange/90">{t('vendorDetail.bookAppointment')}</Button>
                 </CardContent>
               </Card>
             </div>

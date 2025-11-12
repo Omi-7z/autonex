@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Calendar, MessageSquareHeart } from "lucide-react";
+import { Bot, CalendarCheck, MessageSquareHeart } from "lucide-react";
 import { useI18n } from '@/hooks/use-i18n';
-const icons = [Search, Calendar, MessageSquareHeart];
+const icons = [Bot, CalendarCheck, MessageSquareHeart];
 interface OnboardingProps {
   open: boolean;
   onClose: () => void;
@@ -40,7 +40,7 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
                 <CarouselItem key={index}>
                   <div className="p-6">
                     <Card className="border-none shadow-none">
-                      <CardContent className="flex flex-col items-center justify-center p-6 text-center aspect-square">
+                      <CardContent className="flex flex-col items-center justify-center p-6 text-center min-h-[350px]">
                         <Icon className="w-16 h-16 text-brand-orange mb-6" />
                         <h2 className="text-2xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</h2>
                         <p className="text-muted-foreground">{slide.description}</p>

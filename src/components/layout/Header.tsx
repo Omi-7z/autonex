@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 export function Header() {
   const { t, language, setLanguage } = useI18n();
   const user = useUserStore((state) => state.user);
@@ -23,6 +24,21 @@ export function Header() {
     { to: "/translate", label: t('header.translateQuote') },
     { to: "/garage", label: t('header.myGarage') },
   ];
+  const languageSwitcher = (
+    <div className="flex items-center gap-1">
+      {LANGUAGES.map(lang => (
+        <Button
+          key={lang.key}
+          variant="ghost"
+          size="sm"
+          onClick={() => setLanguage(lang.key)}
+          className={language === lang.key ? 'text-foreground font-semibold' : 'text-muted-foreground'}
+        >
+          {lang.label}
+        </Button>
+      ))}
+    </div>
+  );
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,18 +63,8 @@ export function Header() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center gap-1 border-r pr-2 mr-2">
-              {LANGUAGES.map(lang => (
-                <Button
-                  key={lang.key}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setLanguage(lang.key)}
-                  className={language === lang.key ? 'text-foreground font-semibold' : 'text-muted-foreground'}
-                >
-                  {lang.label}
-                </Button>
-              ))}
+            <div className="hidden md:flex items-center border-r pr-2 mr-2">
+              {languageSwitcher}
             </div>
             {user && (
               <DropdownMenu>
@@ -112,6 +118,10 @@ export function Header() {
                     </NavLink>
                   ))}
                 </nav>
+                <Separator className="my-6" />
+                <div className="flex justify-center">
+                  {languageSwitcher}
+                </div>
               </SheetContent>
             </Sheet>
           </div>
