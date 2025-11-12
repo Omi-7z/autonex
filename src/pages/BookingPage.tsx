@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import type { Vendor } from "@shared/types";
 import { cn } from "@/lib/utils";
+import { useBookingStore } from "@/stores/booking-store";
 const timeSlots = [
   "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
   "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM",
@@ -20,6 +21,18 @@ export function BookingPage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [needsReview, setNeedsReview] = useState(false);
+  const setBookingDetails = useBookingStore((state) => state.setBookingDetails);
+  const handleProceedToPayment = () => {
+    if (vendor && date && selectedTime) {
+      setBookingDetails({
+        vendor,
+        date,
+        time: selectedTime,
+        needsReview,
+      });
+      navigate('/pay');
+    }
+  };
   if (!vendor) {
     return (
       <AppLayout>
@@ -102,11 +115,11 @@ export function BookingPage() {
                     <Checkbox id="human-review" checked={needsReview} onCheckedChange={(checked) => setNeedsReview(Boolean(checked))} />
                     <Label htmlFor="human-review" className="text-base">Text me an AutoNex Coordinator to review my booking</Label>
                   </div>
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     className="w-full bg-brand-orange hover:bg-brand-orange/90"
                     disabled={!date || !selectedTime}
-                    onClick={() => navigate('/pay')}
+                    onClick={handleProceedToPayment}
                   >
                     Proceed to Payment
                   </Button>

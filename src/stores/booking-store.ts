@@ -1,12 +1,10 @@
 import { create } from 'zustand';
-import type { Vendor, ServiceItem } from '@shared/types';
+import type { Vendor } from '@shared/types';
 interface BookingDetails {
   vendor: Vendor;
   date: Date;
   time: string;
   needsReview: boolean;
-  services: ServiceItem[];
-  bookingFee: number;
 }
 interface BookingState {
   booking: BookingDetails | null;

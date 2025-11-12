@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { Env } from './core-utils';
 import { ok, notFound } from './core-utils';
-import { MOCK_VENDORS } from "@shared/mock-data";
+import { MOCK_VENDORS, MOCK_SERVICE_HISTORY } from "@shared/mock-data";
 export function userRoutes(app: Hono<{ Bindings: Env }>) {
   app.get('/api/test', (c) => c.json({ success: true, data: { name: 'AutoNex API' }}));
   // GET ALL VENDORS
@@ -16,5 +16,9 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
       return notFound(c, 'Vendor not found');
     }
     return ok(c, vendor);
+  });
+  // GET GARAGE HISTORY
+  app.get('/api/garage/history', async (c) => {
+    return ok(c, MOCK_SERVICE_HISTORY);
   });
 }

@@ -1,4 +1,4 @@
-import type { Vendor } from './types';
+import type { Vendor, ServiceHistory } from './types';
 export const MOCK_VENDORS: Vendor[] = [
   {
     id: 'v1',
@@ -59,4 +59,38 @@ export const MOCK_VENDORS: Vendor[] = [
         { author: 'David L.', rating: 4, comment: 'Solid work, fair pricing. My go-to for all car issues.' },
     ],
   },
+];
+export const MOCK_SERVICE_HISTORY: ServiceHistory[] = [
+    {
+        id: 'h1',
+        vendorName: 'Precision Auto Works',
+        service: 'Brake Pad Replacement',
+        date: new Date('2023-10-15'),
+        cost: 450.00,
+        warrantyExpires: new Date('2024-10-15'),
+    },
+    {
+        id: 'h2',
+        vendorName: 'Quick Lube Express',
+        service: 'Full Synthetic Oil Change',
+        date: new Date('2023-08-01'),
+        cost: 89.99,
+        warrantyExpires: null,
+    },
+    {
+        id: 'h3',
+        vendorName: 'Savannah Bumper & Glass',
+        service: 'Windshield Chip Repair',
+        date: new Date('2023-05-20'),
+        cost: 120.00,
+        warrantyExpires: new Date('2024-05-20'),
+    },
+    {
+        id: 'h4',
+        vendorName: 'Total Car Care',
+        service: 'Check Engine Light Diagnostics',
+        date: new Date('2023-03-10'),
+        cost: 75.00,
+        warrantyExpires: null,
+    }
 ];
