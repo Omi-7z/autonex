@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
 import { Wrench } from "lucide-react";
-import { useI18n } from "@/hooks/use-i18n";
 export function Footer() {
-  const { t } = useI18n();
-  const year = new Date().getFullYear();
   return (
     <footer className="border-t">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -13,17 +10,17 @@ export function Footer() {
             <span className="font-bold text-lg text-brand-navy dark:text-white">AutoNex</span>
           </div>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-            <Link to="#" className="hover:text-foreground">{t('footer.about')}</Link>
-            <Link to="#" className="hover:text-foreground">{t('footer.contact')}</Link>
-            <Link to="#" className="hover:text-foreground">{t('footer.terms')}</Link>
-            <Link to="#" className="hover:text-foreground">{t('footer.privacy')}</Link>
+            <Link to="#" className="hover:text-foreground">About Us</Link>
+            <Link to="#" className="hover:text-foreground">Contact</Link>
+            <Link to="#" className="hover:text-foreground">Terms of Service</Link>
+            <Link to="#" className="hover:text-foreground">Privacy Policy</Link>
           </nav>
           <p className="text-sm text-muted-foreground">
-            {t('footer.builtWithLove')}
+            Built with ❤️ at Cloudflare
           </p>
         </div>
         <div className="mt-8 text-center text-xs text-muted-foreground">
-          {t('footer.copyright', { year })}
+          &copy; {new Date().getFullYear()} AutoNex. All rights reserved.
         </div>
       </div>
     </footer>

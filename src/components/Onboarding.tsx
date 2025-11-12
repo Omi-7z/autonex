@@ -2,6 +2,9 @@ import React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Carousel,
@@ -12,16 +15,29 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bot, CalendarCheck, MessageSquareHeart } from "lucide-react";
-import { useI18n } from '@/hooks/use-i18n';
-const icons = [Bot, CalendarCheck, MessageSquareHeart];
+import { Search, Calendar, MessageSquareHeart } from "lucide-react";
+const onboardingSlides = [
+  {
+    icon: Search,
+    title: "What is AutoNex?",
+    description: "A trusted network of local, high-quality auto repair shops. We help you find the right mechanic without the hassle.",
+  },
+  {
+    icon: Calendar,
+    title: "How does it work?",
+    description: "Describe your issue, choose a vetted vendor, and book a diagnostic appointment for a small, refundable Trust-Fee.",
+  },
+  {
+    icon: MessageSquareHeart,
+    title: "Real Human Support",
+    description: "Need help? An AutoNex Coordinator can review your booking to ensure you get the best care. We're here for you.",
+  },
+];
 interface OnboardingProps {
   open: boolean;
   onClose: () => void;
 }
 export function Onboarding({ open, onClose }: OnboardingProps) {
-  const { t } = useI18n();
-  const onboardingSlides = t('onboarding.slides');
   const [api, setApi] = React.useState<any>();
   const [current, setCurrent] = React.useState(0);
   React.useEffect(() => {
@@ -31,35 +47,32 @@ export function Onboarding({ open, onClose }: OnboardingProps) {
   }, [api]);
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-[90vw] sm:max-w-lg p-0 rounded-lg">
+      <DialogContent className="sm:max-w-[425px] p-0">
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
-            {onboardingSlides.map((slide: { title: string, description: string }, index: number) => {
-              const Icon = icons[index];
-              return (
-                <CarouselItem key={index}>
-                  <div className="p-4 sm:p-6">
-                    <Card className="border-none shadow-none">
-                      <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6 text-center min-h-[320px] sm:min-h-[400px]">
-                        <Icon className="w-12 h-12 sm:w-16 sm:h-16 text-brand-orange mb-4 sm:mb-6" />
-                        <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</h2>
-                        <p className="text-base text-muted-foreground sm:text-lg">{slide.description}</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              );
-            })}
+            {onboardingSlides.map((slide, index) => (
+              <CarouselItem key={index}>
+                <div className="p-6">
+                  <Card className="border-none shadow-none">
+                    <CardContent className="flex flex-col items-center justify-center p-6 text-center aspect-square">
+                      <slide.icon className="w-16 h-16 text-brand-orange mb-6" />
+                      <DialogTitle className="text-2xl font-bold mb-2 text-brand-navy dark:text-white">{slide.title}</DialogTitle>
+                      <DialogDescription className="text-muted-foreground">{slide.description}</DialogDescription>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
           </CarouselContent>
-          <CarouselPrevious className="left-2 hidden sm:flex" />
-          <CarouselNext className="right-2 hidden sm:flex" />
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
         </Carousel>
         <div className="flex justify-center p-4 pt-0">
             {current === onboardingSlides.length - 1 ? (
-                <Button onClick={onClose} className="w-full sm:w-auto sm:px-8 bg-brand-orange hover:bg-brand-orange/90">{t('onboarding.getStarted')}</Button>
+                <Button onClick={onClose} className="w-full bg-brand-orange hover:bg-brand-orange/90">Get Started</Button>
             ) : (
                 <div className="flex items-center gap-2">
-                    {onboardingSlides.map((_: any, i: number) => (
+                    {onboardingSlides.map((_, i) => (
                         <div key={i} className={`h-2 w-2 rounded-full transition-all ${current === i ? 'p-1 bg-brand-orange' : 'bg-muted'}`} />
                     ))}
                 </div>

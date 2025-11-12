@@ -91,6 +91,10 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+            brand: {
+              navy: '#172554', // rgb(23, 37, 84)
+              orange: '#f97316', // rgb(249, 115, 22)
+            },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			muted: {
