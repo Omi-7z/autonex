@@ -1,6 +1,7 @@
 import React from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { Toaster } from "@/components/ui/sonner";
 type AppLayoutProps = {
   children: React.ReactNode;
 };
@@ -12,6 +13,7 @@ export function AppLayout({ children }: AppLayoutProps): JSX.Element {
         {children}
       </main>
       <Footer />
+      <Toaster richColors closeButton />
     </div>
   );
 }

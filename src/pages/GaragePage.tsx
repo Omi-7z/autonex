@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
 import type { Booking } from "@shared/types";
-import { ShieldAlert, User, Loader2 } from "lucide-react";
+import { ShieldAlert, User, Loader2, Wrench } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
 import { useUserStore } from "@/stores/user-store";
 import { toast } from "sonner";
@@ -78,6 +79,7 @@ function DisputeModal({ booking }: { booking: Booking }) {
 }
 export function GaragePage() {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const login = useUserStore((state) => state.login);
   const [history, setHistory] = useState<Booking[]>([]);
@@ -101,6 +103,22 @@ export function GaragePage() {
       setLoading(false);
     }
   }, [user]);
+  const renderEmptyState = () => (
+    <Card className="text-center py-16">
+      <CardHeader>
+        <div className="mx-auto bg-muted rounded-full p-3 w-fit mb-4">
+          <Wrench className="h-10 w-10 text-muted-foreground" />
+        </div>
+        <CardTitle>{t('garage.noHistoryTitle')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground mb-6">{t('garage.noHistoryDescription')}</p>
+        <Button onClick={() => navigate('/vendors')} className="bg-brand-orange hover:bg-brand-orange/90">
+          {t('booking.findVendorButton')}
+        </Button>
+      </CardContent>
+    </Card>
+  );
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,6 +138,37 @@ export function GaragePage() {
                 <Button onClick={login}>{t('garage.signIn')}</Button>
               </CardContent>
             </Card>
+          ) : loading ? (
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('garage.date')}</TableHead>
+                    <TableHead>{t('garage.vendor')}</TableHead>
+                    <TableHead>{t('garage.service')}</TableHead>
+                    <TableHead className="text-right">{t('garage.cost')}</TableHead>
+                    <TableHead>{t('garage.status')}</TableHead>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-5 w-16 ml-auto" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-8 w-24" /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          ) : error ? (
+            <div className="text-center py-12 text-destructive">{error}</div>
+          ) : history.length === 0 ? (
+            renderEmptyState()
           ) : (
             <Card>
               <CardContent className="p-0">
@@ -135,45 +184,24 @@ export function GaragePage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {loading ? (
-                      Array.from({ length: 4 }).map((_, i) => (
-                        <TableRow key={i}>
-                          <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                          <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                          <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                          <TableCell className="text-right"><Skeleton className="h-5 w-16 ml-auto" /></TableCell>
-                          <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                          <TableCell><Skeleton className="h-8 w-24" /></TableCell>
-                        </TableRow>
-                      ))
-                    ) : error ? (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center text-destructive py-12">{error}</TableCell>
+                    {history.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.date.toLocaleDateString()}</TableCell>
+                        <TableCell className="font-medium">{item.vendorName}</TableCell>
+                        <TableCell>{item.services.map(s => s.name).join(', ')}</TableCell>
+                        <TableCell className="text-right">${item.services.reduce((acc, s) => acc + s.price, 0).toFixed(2)}</TableCell>
+                        <TableCell>
+                          {item.dispute ? (
+                              <Badge variant="destructive">{t('garage.disputed')}</Badge>
+                          ) : (
+                              <Badge variant="secondary">{t('garage.completed')}</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DisputeModal booking={item} />
+                        </TableCell>
                       </TableRow>
-                    ) : history.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground py-12">{t('garage.noHistory')}</TableCell>
-                      </TableRow>
-                    ) : (
-                      history.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell>{item.date.toLocaleDateString()}</TableCell>
-                          <TableCell className="font-medium">{item.vendorName}</TableCell>
-                          <TableCell>{item.services.map(s => s.name).join(', ')}</TableCell>
-                          <TableCell className="text-right">${item.services.reduce((acc, s) => acc + s.price, 0).toFixed(2)}</TableCell>
-                          <TableCell>
-                            {item.dispute ? (
-                                <Badge variant="destructive">{t('garage.disputed')}</Badge>
-                            ) : (
-                                <Badge variant="secondary">{t('garage.completed')}</Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <DisputeModal booking={item} />
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
+                    ))}
                   </TableBody>
                 </Table>
               </CardContent>

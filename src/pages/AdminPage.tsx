@@ -23,6 +23,7 @@ export function AdminPage() {
   const [selectedBooking, setSelectedBooking] = useState<AdminBooking | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const fetchQueue = async () => {
     try {
       setLoading(true);
@@ -38,7 +39,11 @@ export function AdminPage() {
     fetchQueue();
   }, []);
   const handleUpdateStatus = async (bookingId: string, status: Booking['status'], notes?: string) => {
-    setIsSubmitting(true);
+    if (notes) {
+      setIsSubmitting(true);
+    } else {
+      setUpdatingId(bookingId);
+    }
     try {
       await api(`/api/bookings/${bookingId}/status`, {
         method: 'PATCH',
@@ -46,12 +51,15 @@ export function AdminPage() {
       });
       toast.success("Booking updated successfully!");
       setQueue(prev => prev.filter(b => b.id !== bookingId));
-      setIsModalOpen(false);
-      setAdminNotes("");
+      if (isModalOpen) {
+        setIsModalOpen(false);
+        setAdminNotes("");
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to update booking.");
     } finally {
       setIsSubmitting(false);
+      setUpdatingId(null);
     }
   };
   const handleApprove = (bookingId: string) => {
@@ -92,7 +100,7 @@ export function AdminPage() {
                         <TableCell><Skeleton className="h-5 w-36" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-48" /></TableCell>
                         <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                        <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
+                        <TableCell className="text-right"><Skeleton className="h-8 w-8 ml-auto rounded-full" /></TableCell>
                       </TableRow>
                     ))
                   ) : error ? (
@@ -117,23 +125,29 @@ export function AdminPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleApprove(booking.id)}>
-                                <Check className="mr-2 h-4 w-4" />
-                                {t('admin.approveBooking')}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => openContactModal(booking)}>
-                                <MessageSquare className="mr-2 h-4 w-4" />
-                                {t('admin.contactCustomer')}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          {updatingId === booking.id ? (
+                            <div className="flex justify-end items-center h-full pr-3">
+                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            </div>
+                          ) : (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleApprove(booking.id)}>
+                                  <Check className="mr-2 h-4 w-4" />
+                                  {t('admin.approveBooking')}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openContactModal(booking)}>
+                                  <MessageSquare className="mr-2 h-4 w-4" />
+                                  {t('admin.contactCustomer')}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))

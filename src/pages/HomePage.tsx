@@ -11,6 +11,7 @@ import { useI18n } from "@/hooks/use-i18n";
 import { api } from "@/lib/api-client";
 import type { AIIntakeResponse } from "@shared/types";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 const categoryIcons = {
   quickService: Wrench,
   mechanical: Car,
@@ -79,59 +80,81 @@ export function HomePage() {
       <Onboarding open={showOnboarding} onClose={handleOnboardingClose} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16 md:py-24 lg:py-32 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand-navy dark:text-white tracking-tight">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand-navy dark:text-white tracking-tight"
+          >
             {t('home.title')}
-          </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground"
+          >
             {t('home.subtitle')}
-          </p>
-          <div className="mt-10 max-w-2xl mx-auto">
-            <form onSubmit={handleAiSearch} className="text-center">
-              <p className="text-muted-foreground mb-2 flex items-center justify-center gap-2">
-                <Bot className="h-5 w-5" />
-                {t('home.aiPrompt')}
-              </p>
-              <Textarea
-                placeholder={t('home.aiPlaceholder')}
-                value={aiQuery}
-                onChange={(e) => setAiQuery(e.target.value)}
-                className="min-h-[80px]"
-              />
-              <Button type="submit" className="mt-4 bg-brand-orange hover:bg-brand-orange/90" disabled={isAiLoading}>
-                {isAiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t('home.aiButton')}
-              </Button>
-            </form>
-          </div>
-          <form onSubmit={handleSearch} className="mt-12 max-w-xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder={t('home.searchPlaceholder')}
-                className="w-full pl-12 pr-4 py-3 h-12 text-base"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="mt-10 max-w-2xl mx-auto">
+              <form onSubmit={handleAiSearch} className="text-center">
+                <p className="text-muted-foreground mb-2 flex items-center justify-center gap-2">
+                  <Bot className="h-5 w-5" />
+                  {t('home.aiPrompt')}
+                </p>
+                <Textarea
+                  placeholder={t('home.aiPlaceholder')}
+                  value={aiQuery}
+                  onChange={(e) => setAiQuery(e.target.value)}
+                  className="min-h-[80px]"
+                />
+                <Button type="submit" className="mt-4 bg-brand-orange hover:bg-brand-orange/90" disabled={isAiLoading}>
+                  {isAiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {t('home.aiButton')}
+                </Button>
+              </form>
             </div>
-          </form>
+            <form onSubmit={handleSearch} className="mt-12 max-w-xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder={t('home.searchPlaceholder')}
+                  className="w-full pl-12 pr-4 py-3 h-12 text-base"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </form>
+          </motion.div>
         </div>
         <div className="pb-16 md:pb-24 lg:pb-32">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {serviceCategories.map((category) => {
+            {serviceCategories.map((category, index) => {
               const Icon = categoryIcons[category.key as keyof typeof categoryIcons];
               return (
-                <Card
-                  key={category.name}
-                  onClick={() => handleCategoryClick(category.name)}
-                  className="text-center cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1"
+                <motion.div
+                  key={category.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                 >
-                  <CardContent className="p-6">
-                    <Icon className="h-10 w-10 mx-auto text-brand-orange mb-4" />
-                    <h3 className="font-semibold text-lg text-brand-navy dark:text-white">{category.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{category.description}</p>
-                  </CardContent>
-                </Card>
+                  <Card
+                    onClick={() => handleCategoryClick(category.name)}
+                    className="text-center cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 h-full"
+                  >
+                    <CardContent className="p-6 flex flex-col items-center justify-center">
+                      <Icon className="h-10 w-10 mx-auto text-brand-orange mb-4" />
+                      <h3 className="font-semibold text-lg text-brand-navy dark:text-white">{category.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1 flex-grow">{category.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
