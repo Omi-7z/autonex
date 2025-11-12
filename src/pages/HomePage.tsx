@@ -2,9 +2,8 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Wrench, Car, Microscope, Bot, Loader2, Paintbrush } from "lucide-react";
+import { Wrench, Car, Microscope, Bot, Loader2, Paintbrush } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useI18n } from "@/hooks/use-i18n";
 import { api } from "@/lib/api-client";
@@ -19,7 +18,6 @@ const categoryIcons = {
 };
 export function HomePage() {
   const { t } = useI18n();
-  const [searchTerm, setSearchTerm] = useState("");
   const [aiQuery, setAiQuery] = useState("");
   const [isAiLoading, setIsAiLoading] = useState(false);
   const navigate = useNavigate();
@@ -29,12 +27,6 @@ export function HomePage() {
     { key: "bodyGlass", ...t('home.categories.bodyGlass') },
     { key: "diagnostics", ...t('home.categories.diagnostics') },
   ];
-  const handleSearch = (e: FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/vendors?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
-  };
   const handleAiSearch = async (e: FormEvent) => {
     e.preventDefault();
     if (!aiQuery.trim()) return;
@@ -98,18 +90,6 @@ export function HomePage() {
                 </Button>
               </form>
             </div>
-            <form onSubmit={handleSearch} className="mt-12 max-w-xl mx-auto">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder={t('home.searchPlaceholder')}
-                  className="w-full pl-12 pr-4 py-3 h-12 text-base"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </form>
           </motion.div>
         </div>
         <div className="pb-16 md:pb-24 lg:pb-32">
@@ -137,6 +117,9 @@ export function HomePage() {
               );
             })}
           </div>
+           <p className="text-center text-muted-foreground mt-8 text-sm font-medium tracking-wider">
+            {t('home.howItWorks')}
+          </p>
         </div>
       </div>
     </AppLayout>
