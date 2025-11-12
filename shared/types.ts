@@ -25,6 +25,7 @@ export interface ServiceItem {
   name: string;
   description: string;
   price: number;
+  category: 'Quick Service' | 'Mechanical' | 'Body/Glass' | 'Diagnostics';
 }
 export interface ServiceBundle {
   id: string;

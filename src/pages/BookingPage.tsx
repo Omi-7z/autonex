@@ -16,6 +16,13 @@ const timeSlots = [
   "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
   "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM",
 ];
+const FEE_STRUCTURE = {
+  'Body/Glass': 20,
+  'Mechanical': 12,
+  'Diagnostics': 12,
+  'Quick Service': 5,
+};
+const CATEGORY_PRIORITY: (keyof typeof FEE_STRUCTURE)[] = ['Body/Glass', 'Mechanical', 'Diagnostics', 'Quick Service'];
 export function BookingPage() {
   const { t } = useI18n();
   const location = useLocation();
@@ -34,12 +41,20 @@ export function BookingPage() {
       }
     } else if (step === 'datetime') {
       if (vendor && date && selectedTime) {
+        let highestPriorityFee = 5; // Default fee
+        for (const category of CATEGORY_PRIORITY) {
+          if (selectedServices.some(s => s.category === category)) {
+            highestPriorityFee = FEE_STRUCTURE[category];
+            break;
+          }
+        }
         setBookingDetails({
           vendor,
           date,
           time: selectedTime,
           needsReview,
           services: selectedServices,
+          bookingFee: highestPriorityFee,
         });
         navigate('/pay');
       }

@@ -70,7 +70,24 @@ export function HomePage() {
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             {t('home.subtitle')}
           </p>
-          <form onSubmit={handleSearch} className="mt-10 max-w-xl mx-auto">
+          <div className="mt-10 max-w-2xl mx-auto">
+            <form onSubmit={handleAiSearch} className="text-center">
+              <p className="text-muted-foreground mb-2 flex items-center justify-center gap-2">
+                <Bot className="h-5 w-5" />
+                {t('home.aiPrompt')}
+              </p>
+              <Textarea
+                placeholder={t('home.aiPlaceholder')}
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                className="min-h-[80px]"
+              />
+              <Button type="submit" className="mt-4 bg-brand-orange hover:bg-brand-orange/90">
+                {t('home.aiButton')}
+              </Button>
+            </form>
+          </div>
+          <form onSubmit={handleSearch} className="mt-12 max-w-xl mx-auto">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
@@ -101,23 +118,6 @@ export function HomePage() {
                 </Card>
               );
             })}
-          </div>
-          <div className="mt-12 max-w-2xl mx-auto">
-            <form onSubmit={handleAiSearch} className="text-center">
-              <p className="text-muted-foreground mb-2 flex items-center justify-center gap-2">
-                <Bot className="h-5 w-5" />
-                {t('home.aiPrompt')}
-              </p>
-              <Textarea
-                placeholder={t('home.aiPlaceholder')}
-                value={aiQuery}
-                onChange={(e) => setAiQuery(e.target.value)}
-                className="min-h-[80px]"
-              />
-              <Button type="submit" className="mt-4 bg-brand-orange hover:bg-brand-orange/90">
-                {t('home.aiButton')}
-              </Button>
-            </form>
           </div>
         </div>
       </div>

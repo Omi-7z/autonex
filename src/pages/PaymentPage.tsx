@@ -9,7 +9,7 @@ import { Apple, CreditCard, Loader2 } from "lucide-react";
 import { api } from "@/lib/api-client";
 import type { CreateBookingPayload } from "@shared/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Info } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
 export function PaymentPage() {
   const { t } = useI18n();
@@ -133,10 +133,14 @@ export function PaymentPage() {
                   <span className="font-semibold">{t('payment.estimatedTotal')}</span>
                   <span className="text-lg font-bold text-brand-navy dark:text-white">${estimatedTotal.toFixed(2)}</span>
                 </div>
+                <div className="flex items-start gap-2 text-sm text-muted-foreground p-3 bg-background rounded-md">
+                  <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <span>{t('payment.payableToVendor')}</span>
+                </div>
               </CardContent>
               <CardFooter className="flex justify-between items-baseline bg-muted/80 p-4 rounded-b-lg">
                 <span className="font-semibold">{t('payment.feeLabel')}</span>
-                <span className="text-2xl font-bold text-brand-navy dark:text-white">$5.00</span>
+                <span className="text-2xl font-bold text-brand-navy dark:text-white">${booking.bookingFee.toFixed(2)}</span>
               </CardFooter>
             </Card>
           </div>

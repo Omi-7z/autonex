@@ -6,6 +6,7 @@ interface BookingDetails {
   time: string;
   needsReview: boolean;
   services: ServiceItem[];
+  bookingFee: number;
 }
 interface BookingState {
   booking: BookingDetails | null;

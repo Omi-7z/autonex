@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/stores/booking-store";
 import { CheckCircle, Calendar, Clock, MapPin } from "lucide-react";
 import { useI18n } from "@/hooks/use-i18n";
+import { Separator } from "@/components/ui/separator";
 export function ConfirmationPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export function ConfirmationPage() {
   if (!booking) {
     return null;
   }
+  const estimatedTotal = booking.services.reduce((acc, service) => acc + service.price, 0);
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,6 +52,18 @@ export function ConfirmationPage() {
                     <Clock className="h-4 w-4" />
                     <span>{booking.time}</span>
                   </div>
+                </div>
+                <Separator className="my-4" />
+                <div>
+                  <p className="text-sm text-muted-foreground">{t('payment.selectedServices')}</p>
+                  <ul className="font-semibold list-disc list-inside text-sm">
+                    {booking.services.map(s => <li key={s.id}>{s.name}</li>)}
+                  </ul>
+                </div>
+                <Separator className="my-4" />
+                <div className="flex justify-between items-baseline">
+                  <span className="font-semibold">{t('confirmation.amountDue')}</span>
+                  <span className="text-xl font-bold text-brand-navy dark:text-white">${estimatedTotal.toFixed(2)}</span>
                 </div>
               </div>
               {booking.needsReview && (
