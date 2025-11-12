@@ -64,7 +64,7 @@ export function HomePage() {
         method: 'POST',
         body: JSON.stringify({ query: aiQuery.trim() }),
       });
-      navigate(`/vendors?q=${encodeURIComponent(result.searchTerm)}&category=${result.category}`);
+      navigate(`/vendors?q=${encodeURIComponent(result.searchTerm)}&category=${result.category}&source=ai`);
     } catch (err) {
       toast.error("AI analysis failed. Please try a manual search.");
       console.error(err);

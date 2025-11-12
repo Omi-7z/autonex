@@ -86,6 +86,7 @@ export function VendorsPage() {
   const [serviceFilter, setServiceFilter] = useState(searchParams.get('category') || "all");
   const [isAlumniOwned, setIsAlumniOwned] = useState(false);
   const [isParentOwned, setIsParentOwned] = useState(false);
+  const isAiSearch = searchParams.get('source') === 'ai';
   useEffect(() => {
     async function fetchVendors() {
       try {
@@ -111,10 +112,13 @@ export function VendorsPage() {
       const matchesParent = !isParentOwned || vendor.isParentOwned;
       return matchesSearch && matchesService && matchesAlumni && matchesParent;
     });
-    const preferred = filtered.find(v => v.id === PREFERRED_VENDOR_ID);
-    const others = filtered.filter(v => v.id !== PREFERRED_VENDOR_ID);
-    return { preferredVendor: preferred, otherVendors: others };
-  }, [vendors, searchTerm, serviceFilter, isAlumniOwned, isParentOwned]);
+    if (isAiSearch) {
+      const preferred = filtered.find(v => v.id === PREFERRED_VENDOR_ID);
+      const others = filtered.filter(v => v.id !== PREFERRED_VENDOR_ID);
+      return { preferredVendor: preferred, otherVendors: others };
+    }
+    return { preferredVendor: undefined, otherVendors: filtered };
+  }, [vendors, searchTerm, serviceFilter, isAlumniOwned, isParentOwned, isAiSearch]);
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -164,13 +168,13 @@ export function VendorsPage() {
             </div>
           ) : (
             <>
-              {preferredVendor && (
+              {preferredVendor && isAiSearch && (
                 <div className="mb-8">
                   <Badge className="mb-2 bg-yellow-400 text-yellow-900 hover:bg-yellow-400"><Award className="h-4 w-4 mr-1" /> {t('vendors.preferred')}</Badge>
                   <VendorCard vendor={preferredVendor} searchTerm={searchTerm} />
                 </div>
               )}
-              {otherVendors.length > 0 && preferredVendor && (
+              {otherVendors.length > 0 && preferredVendor && isAiSearch && (
                 <Alert className="mb-8">
                   <Bot className="h-4 w-4" />
                   <AlertTitle>AI Tip</AlertTitle>
