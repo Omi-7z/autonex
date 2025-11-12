@@ -5,7 +5,7 @@ import { Onboarding } from "@/components/Onboarding";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Wrench, Car, Microscope, Bot, Loader2 } from "lucide-react";
+import { Search, Wrench, Car, Microscope, Bot, Loader2, Paintbrush } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useI18n } from "@/hooks/use-i18n";
 import { api } from "@/lib/api-client";
@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 const categoryIcons = {
   quickService: Wrench,
   mechanical: Car,
-  bodyGlass: Wrench,
+  bodyGlass: Paintbrush,
   diagnostics: Microscope,
 };
 export function HomePage() {
