@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/hooks/use-i18n";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 interface RoadsideAssistanceModalProps {
   isOpen: boolean;
@@ -30,14 +30,14 @@ interface RoadsideAssistanceModalProps {
 export function RoadsideAssistanceModal({ isOpen, onClose }: RoadsideAssistanceModalProps) {
   const { t } = useI18n();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const formSchema = z.object({
+  const formSchema = useMemo(() => z.object({
     vin: z.string().min(11, { message: t('roadsideAssistance.validation.vin') }).max(17),
     insuranceCompany: z.string().min(2, { message: t('roadsideAssistance.validation.insuranceCompany') }),
     insuranceNumber: z.string().min(5, { message: t('roadsideAssistance.validation.insuranceNumber') }),
     mileage: z.string().refine(val => !isNaN(parseInt(val, 10)) && parseInt(val, 10) >= 0, {
       message: t('roadsideAssistance.validation.mileage'),
     }),
-  });
+  }), [t]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,7 +47,7 @@ export function RoadsideAssistanceModal({ isOpen, onClose }: RoadsideAssistanceM
       mileage: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = useCallback((values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     // Simulate API call
     setTimeout(() => {
@@ -57,7 +57,7 @@ export function RoadsideAssistanceModal({ isOpen, onClose }: RoadsideAssistanceM
       form.reset();
       onClose();
     }, 1500);
-  }
+  }, [t, form, onClose]);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
