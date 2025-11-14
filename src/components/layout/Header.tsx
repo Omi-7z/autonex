@@ -26,6 +26,7 @@ export function Header() {
     { to: "/vendors", label: t('header.findVendor') },
     { to: "/translate", label: t('header.translateQuote') },
     { to: "/garage", label: t('header.myGarage') },
+    { to: "/car-health", label: t('header.carHealth') },
   ];
   const languageSwitcher = (
     <div className="flex items-center gap-1">

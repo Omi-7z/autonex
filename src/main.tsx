@@ -19,6 +19,7 @@ import { ConfirmationPage } from '@/pages/ConfirmationPage';
 import { TranslatePage } from '@/pages/TranslatePage';
 import { GaragePage } from '@/pages/GaragePage';
 import { AdminPage } from '@/pages/AdminPage';
+import { CarHealthPage } from '@/pages/CarHealthPage';
 import { I18nProvider } from '@/providers/I18nProvider';
 const router = createBrowserRouter([
   {
@@ -64,6 +65,11 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <AdminPage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/car-health",
+    element: <CarHealthPage />,
     errorElement: <RouteErrorBoundary />,
   },
 ]);
