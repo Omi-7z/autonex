@@ -2,7 +2,7 @@
 
 A modern, minimalist web application for booking trusted car repair services, featuring AI-powered intake, a vendor rating system, and human-in-the-loop support.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Omi-7z/autonex)
 
 ## About The Project
 
@@ -103,7 +103,7 @@ This project is configured for seamless deployment to Cloudflare Pages.
 
 Alternatively, you can connect your GitHub repository to Cloudflare Pages for automatic deployments on every push.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Omi-7z/autonex)
 
 ## License
 
