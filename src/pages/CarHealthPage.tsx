@@ -149,7 +149,7 @@ export function CarHealthPage() {
               <div className="text-center mt-8">
                 <Button onClick={handleStartScan} variant="outline">
                   <ScanLine className="h-4 w-4 mr-2" />
-                  Re-scan Vehicle
+                  {t('carHealth.rescanButton')}
                 </Button>
               </div>
             </>
