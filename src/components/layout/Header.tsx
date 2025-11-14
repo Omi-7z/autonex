@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Wrench, User, LogOut, ShieldAlert } from "lucide-react";
+import { Menu, Wrench, User, LogOut, ShieldAlert, Search, Languages, Car, HeartPulse } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useI18n } from "@/hooks/use-i18n";
 import { LANGUAGES } from "@/lib/i18n";
@@ -23,10 +23,10 @@ export function Header() {
   const logout = useUserStore((state) => state.logout);
   const [isRoadsideModalOpen, setIsRoadsideModalOpen] = useState(false);
   const navLinks = [
-    { to: "/vendors", label: t('header.findVendor') },
-    { to: "/translate", label: t('header.translateQuote') },
-    { to: "/garage", label: t('header.myGarage') },
-    { to: "/car-health", label: t('header.carHealth') },
+    { to: "/vendors", label: t('header.findVendor'), icon: Search },
+    { to: "/translate", label: t('header.translateQuote'), icon: Languages },
+    { to: "/garage", label: t('header.myGarage'), icon: Car },
+    { to: "/car-health", label: t('header.carHealth'), icon: HeartPulse },
   ];
   const languageSwitcher = (
     <div className="flex items-center gap-1">
@@ -113,20 +113,24 @@ export function Header() {
                       <Wrench className="h-6 w-6 text-brand-orange" />
                       <span className="text-brand-navy dark:text-white">AutoNex</span>
                     </Link>
-                    {navLinks.map((link) => (
-                      <NavLink
-                        key={link.to}
-                        to={link.to}
-                        className={({ isActive }) =>
-                          `hover:text-foreground/80 ${
-                            isActive ? "text-foreground" : "text-muted-foreground"
-                          }`
-                        }
-                      >
-                        {link.label}
-                      </NavLink>
-                    ))}
-                     <a href="#" onClick={(e) => { e.preventDefault(); setIsRoadsideModalOpen(true); }} className="text-muted-foreground hover:text-foreground/80 flex items-center gap-2">
+                    {navLinks.map((link) => {
+                      const Icon = link.icon;
+                      return (
+                        <NavLink
+                          key={link.to}
+                          to={link.to}
+                          className={({ isActive }) =>
+                            `flex items-center gap-3 hover:text-foreground/80 ${
+                              isActive ? "text-foreground" : "text-muted-foreground"
+                            }`
+                          }
+                        >
+                          <Icon className="h-5 w-5" />
+                          {link.label}
+                        </NavLink>
+                      );
+                    })}
+                     <a href="#" onClick={(e) => { e.preventDefault(); setIsRoadsideModalOpen(true); }} className="text-muted-foreground hover:text-foreground/80 flex items-center gap-3">
                       <ShieldAlert className="h-5 w-5" />
                       {t('roadsideAssistance.button')}
                     </a>
